@@ -14,6 +14,7 @@ typedef struct Indice_Invertido
 {
     int qtde;
     int idDoc;
+    Apontador_Ind proxInd;
 } Indice_Invertido;
 
 typedef struct Indice_Invertido* Apontador_Ind;
