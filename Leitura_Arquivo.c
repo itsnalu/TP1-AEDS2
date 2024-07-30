@@ -2,6 +2,12 @@
 #include <string.h>
 #include "Leitura_Arquivo.h"
 
+
+#define MAX_FILENAME_LENGTH 100
+#define MAX_CONTENT_LENGTH 1000
+#define MAX_INGREDIENTS 48
+#define MAX_INGREDIENT_LENGTH 100
+
 int Contar_Ocorrencias(const char *string, const char *substring) {
     int count = 0;
     const char *temp = string;
@@ -14,54 +20,60 @@ int Contar_Ocorrencias(const char *string, const char *substring) {
     return count;
 }
 
-
-void RemoveEspacos(char *str) {
-    if (str[0] == ' ') {
-        memmove(str, str + 1, strlen(str));
-    }
-}
-
-// Lista de stop words em inglês
-const char *stopWords[] = {
-    "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "has", 
-    "he", "in", "is", "it", "its", "of", "on", "that", "the", "to", "was", 
-    "were", "will", "with"
-};
-const int num_stopWords = sizeof(stopWords) / sizeof(stopWords[0]);
-
-// Função para verificar se uma palavra é uma stop word
-int isStopWord(const char *word) {
-    for (int i = 0; i < num_stopWords; i++) {
-        if (strcmp(word, stopWords[i]) == 0) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-// Função para remover stop words de um texto
-char* removeStopWords(const char *text) {
-    // Fazer uma cópia do texto para trabalhar
-    char *textCopy = strdup(text);
-    char *token;
-    char *result = (char*)malloc(strlen(text) + 1);
-    result[0] = '\0';
-
-    // Tokenizar o texto e remover as stop words
-    token = strtok(textCopy, " ");
-    while (token != NULL) {
-        if (!isStopWord(token)) {
-            strcat(result, token);
-            strcat(result, " ");
-        }
-        token = strtok(NULL, " ");
+void lerEProcessarArquivo(const char *nomeArquivo) {
+    FILE *arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL) {
+        perror("Erro ao abrir o arquivo especificado");
+        return;
     }
 
-    // Remover o espaço extra no final
-    if (strlen(result) > 0 && result[strlen(result) - 1] == ' ') {
-        result[strlen(result) - 1] = '\0';
+    char nomeReceita[MAX_CONTENT_LENGTH];
+    char ingredientes[MAX_INGREDIENTS][MAX_INGREDIENT_LENGTH];
+    char modoPreparo[MAX_CONTENT_LENGTH];
+
+    // Ler a primeira linha e armazenar em nomeReceita
+    if (fgets(nomeReceita, sizeof(nomeReceita), arquivo) == NULL) {
+        perror("Erro ao ler o nome da receita");
+        fclose(arquivo);
+        return;
+    }
+    nomeReceita[strcspn(nomeReceita, "\n")] = 0; // Remover nova linha
+
+    // Ler a segunda linha e separar os ingredientes por ponto e vírgula
+    char linhaIngredientes[MAX_CONTENT_LENGTH];
+    if (fgets(linhaIngredientes, sizeof(linhaIngredientes), arquivo) == NULL) {
+        perror("Erro ao ler os ingredientes");
+        fclose(arquivo);
+        return;
+    }
+    linhaIngredientes[strcspn(linhaIngredientes, "\n")] = 0; // Remover nova linha
+
+    int i = 0;
+    char *token = strtok(linhaIngredientes, ";");
+    while (token != NULL && i < MAX_INGREDIENTS) {
+        strncpy(ingredientes[i], token, MAX_INGREDIENT_LENGTH - 1);
+        ingredientes[i][MAX_INGREDIENT_LENGTH - 1] = 0; // Garantir terminação nula
+        i++;
+        token = strtok(NULL, ";");
     }
 
-    free(textCopy);
-    return result;
+    // Ler a terceira linha e armazenar em modoPreparo
+    if (fgets(modoPreparo, sizeof(modoPreparo), arquivo) == NULL) {
+        perror("Erro ao ler o modo de preparo");
+        fclose(arquivo);
+        return;
+    }
+    modoPreparo[strcspn(modoPreparo, "\n")] = 0; // Remover nova linha
+
+    // Fechar o arquivo após a leitura
+    fclose(arquivo);
+
+    // Exibir os resultados
+    printf("Nome da Receita: %s\n", nomeReceita);
+
+    for (int j = 0; j < i; j++) {
+        printf("-%s\n", ingredientes[j]);
+    }
+    printf("Modo de Preparo: %s\n", modoPreparo);
+    printf("testestestestes");
 }

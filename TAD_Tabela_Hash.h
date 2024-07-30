@@ -1,30 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
 #include <string.h>
-#define M 7
-#define N 7      
+#define N 46
+//Utilizando a formula para calcular o M = alpha/N, sendo alpha 3 e N 46
+// O resultado deu ~15,333 e foi arredondado para 17 (o número primo mais próximo)
+#define M 17
 #define TAMALFABETO 256
 
 
+
 /* typedef unsigned int  TipoPesos[n]; */
-typedef char Palavra[50];
+typedef char* Palavra;
 
 typedef struct Indice_Invertido
 {
     int qtde;
     int idDoc;
-    Apontador_Ind proxInd;
+    struct Indice_Invertido* proxInd;
 } Indice_Invertido;
 
-typedef struct Indice_Invertido* Apontador_Ind;
 typedef struct Tipo_Celula* Apontador_Prox;
 
 typedef struct Tipo_Celula
 {
     Palavra Ingrediente;
     struct Tipo_Celula *Prox;
-    Apontador_Ind Indices;
+    struct Indice_Invertido* Indices;
 } Tipo_Celula;
 
 typedef struct Tabela_Hash
@@ -32,7 +33,7 @@ typedef struct Tabela_Hash
     Tipo_Celula *Primeiro, *Ultimo;
 } Tabela_Hash;
 
-typedef unsigned TipoPesos[N][TAMALFABETO];
+typedef unsigned* TipoPesos[TAMALFABETO];
 typedef unsigned int Tipo_Indice;
 typedef Tipo_Celula* Apontador_Prox;
 typedef Tabela_Hash Vetor[M];

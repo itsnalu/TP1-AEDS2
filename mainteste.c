@@ -2,92 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Leitura_Arquivo.c"
-
-#define MAX_FILENAME_LENGTH 100
-#define MAX_CONTENT_LENGTH 1000
-#define MAX_INGREDIENTS 100
-#define MAX_INGREDIENT_LENGTH 100
+#include "TAD_Tabela_Hash.c"
 
 
-void lerEProcessarArquivo(const char *nomeArquivo) {
-    FILE *arquivo = fopen(nomeArquivo, "r");
-    if (arquivo == NULL) {
-        perror("Erro ao abrir o arquivo especificado");
-        return;
-    }
-
-    char nomeReceita[MAX_CONTENT_LENGTH];
-    char ingredientes[MAX_INGREDIENTS][MAX_INGREDIENT_LENGTH];
-    char modoPreparo[MAX_CONTENT_LENGTH];
-
-    // Ler a primeira linha e armazenar em nomeReceita
-    if (fgets(nomeReceita, sizeof(nomeReceita), arquivo) == NULL) {
-        perror("Erro ao ler o nome da receita");
-        fclose(arquivo);
-        return;
-    }
-    nomeReceita[strcspn(nomeReceita, "\n")] = 0; // Remover nova linha
-
-    // Remover stop words do nome da receita
-    char *nomeReceitaSemStopWords = removeStopWords(nomeReceita);
-
-    // Ler a segunda linha e separar os ingredientes por ponto e vírgula
-    char linhaIngredientes[MAX_CONTENT_LENGTH];
-    if (fgets(linhaIngredientes, sizeof(linhaIngredientes), arquivo) == NULL) {
-        perror("Erro ao ler os ingredientes");
-        fclose(arquivo);
-        return;
-    }
-    linhaIngredientes[strcspn(linhaIngredientes, "\n")] = 0; // Remover nova linha
-
-    int i = 0;
-    char *token = strtok(linhaIngredientes, ";");
-    while (token != NULL && i < MAX_INGREDIENTS) {
-        strncpy(ingredientes[i], token, MAX_INGREDIENT_LENGTH - 1);
-        ingredientes[i][MAX_INGREDIENT_LENGTH - 1] = 0; // Garantir terminação nula
-        i++;
-        token = strtok(NULL, ";");
-    }
-
-    // Remover stop words de cada ingrediente
-    for (int j = 0; j < i; j++) {
-        char *ingredienteSemStopWords = removeStopWords(ingredientes[j]);
-        strncpy(ingredientes[j], ingredienteSemStopWords, MAX_INGREDIENT_LENGTH - 1);
-        ingredientes[j][MAX_INGREDIENT_LENGTH - 1] = '\0'; // Garantir terminação nula
-        free(ingredienteSemStopWords);
-    }
-
-    // Ler a terceira linha e armazenar em modoPreparo
-    if (fgets(modoPreparo, sizeof(modoPreparo), arquivo) == NULL) {
-        perror("Erro ao ler o modo de preparo");
-        fclose(arquivo);
-        return;
-    }
-    modoPreparo[strcspn(modoPreparo, "\n")] = 0; // Remover nova linha
-
-    // Remover stop words do modo de preparo
-    char *modoPreparoSemStopWords = removeStopWords(modoPreparo);
-
-    // Fechar o arquivo após a leitura
-    fclose(arquivo);
-
-    // Exibir os resultados
-    printf("Nome da Receita: %s\n", nomeReceitaSemStopWords);
-
-    for (int j = 0; j < i; j++) {
-        printf("- %s\n", ingredientes[j]);
-    }
-    printf("Modo de Preparo: %s\n", modoPreparoSemStopWords);
-
-    // Liberar a memória alocada
-    free(nomeReceitaSemStopWords);
-    free(modoPreparoSemStopWords);
-}
 
 int main() {
     FILE *entrada;
     int numArquivos;
     char nomeArquivo[MAX_FILENAME_LENGTH];
+
     
     // Abrir o arquivo entrada.txt
     entrada = fopen("entrada.txt", "r");
@@ -116,8 +39,55 @@ int main() {
         lerEProcessarArquivo(nomeArquivo);
     }
 
+
+
     // Fechar o arquivo entrada.txt
     fclose(entrada);
 
+
+    Vetor Tabela;
+    TipoPesos p;
+    Inicializa(Tabela);
+    
+    printf("lala\n");
+    GeraPesos(p);
+
+    
+    printf("lala\n");
+
+    char* palavras[] = {"banana", "abacaxi", "uva", "manga", "laranja", "melancia", "cereja", "pera", "maçã", "pêssego"};
+    int n = sizeof(palavras) / sizeof(palavras[0]);
+
+    printf("Inserindo palavras:\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("Inserindo %s\n", palavras[i]);
+        Insere(palavras[i], p, Tabela);
+    }
+
+    printf("\nTabela Hash após inserções:\n");
+    Imprime(Tabela);
+
+    printf("\nPesquisando palavras:\n");
+    for (int i = 0; i < n; i++)
+    {
+        if (Pesquisa(palavras[i], p, Tabela) != NULL)
+            printf("Palavra %s encontrada.\n", palavras[i]);
+        else
+            printf("Palavra %s não encontrada.\n", palavras[i]);
+    }
+
+    printf("\nRemovendo algumas palavras:\n");
+    for (int i = 0; i < n; i += 2)
+    {
+        printf("Removendo %s\n", palavras[i]);
+        Retira(palavras[i], p, Tabela);
+    }
+
+    printf("\nTabela Hash após remoções:\n");
+    Imprime(Tabela);
+
+
     return 0;
 }
+
