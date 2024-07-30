@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include <sys/time.h>
 #define D 8 /* depende de TipoChave */
@@ -20,7 +21,8 @@ typedef struct TipoPatNo
         {
             TipoIndexAmp Index;
             TipoArvore Esq, Dir;
-        } NInterno; \\
+            char ComparaLetra;
+        } NInterno;
         Palavra Chave;
     } NO;
 } TipoPatNo;
@@ -34,3 +36,5 @@ typedef struct Indice_Invertido
 
 typedef struct Indice_Invertido* Apontador_Ind;
 typedef struct Tipo_Celula* Apontador_Prox;
+
+// criar lista; 

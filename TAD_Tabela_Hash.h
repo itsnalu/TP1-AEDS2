@@ -1,6 +1,10 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <sys/time.h>
+#include <ctype.h> // biblioteca para tolower
 #define N 46
 //Utilizando a formula para calcular o M = alpha/N, sendo alpha 3 e N 46
 // O resultado deu ~15,333 e foi arredondado para 17 (o número primo mais próximo)
@@ -33,19 +37,13 @@ typedef struct Tabela_Hash
     Tipo_Celula *Primeiro, *Ultimo;
 } Tabela_Hash;
 
-typedef unsigned* TipoPesos[TAMALFABETO];
+typedef unsigned TipoPesos[N][TAMALFABETO];
 typedef unsigned int Tipo_Indice;
 typedef Tipo_Celula* Apontador_Prox;
 typedef Tabela_Hash Vetor[M];
 
 typedef unsigned int TipoIndice;
 
-
-
-Vetor Tabela;
-Tipo_Celula Elemento;
-TipoPesos p;
-Apontador_Prox i;
 
 
 void to_Lower_Case(char *str);

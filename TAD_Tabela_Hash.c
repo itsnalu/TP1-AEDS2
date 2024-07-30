@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <sys/time.h>
-#include <ctype.h> // biblioteca para tolower
 #include "TAD_Tabela_Hash.h"
 
 void To_Lower_Case(char *str)
@@ -38,7 +33,7 @@ void Ins(Palavra x, Tabela_Hash *Lista)
 }
 
 void Ret(Apontador_Prox p, Tabela_Hash *Lista, Palavra *Ingrediente)
-{ 
+{
     Apontador_Prox q;
     if (Vazia(*Lista) || p == NULL || p->Prox == NULL)
     {
@@ -60,8 +55,8 @@ void GeraPesos(TipoPesos p)
     struct timeval semente;
     gettimeofday(&semente, NULL);
     srand((int)(semente.tv_sec + 1000000 * semente.tv_usec));
-    
-    //srand(NULL);
+
+    // srand(NULL);
     for (i = 0; i < N; i++)
         for (j = 0; j < TAMALFABETO; j++)
             p[i][j] = 1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0));
@@ -137,16 +132,17 @@ void Imprime(Vetor Tabela)
     int i;
     for (i = 0; i < M; i++)
     {
+        
         printf("%d: ", i);
         if (!Vazia(Tabela[i]))
             Imp(Tabela[i]);
         putchar('\n');
+        
+        
+        
+        
     }
 }
-
-
-
-
 
 /*
 void GeraPesos(TipoPesos p)
@@ -166,5 +162,3 @@ TipoIndice h(Palavra Chave, TipoPesos p)
   return (Soma % M);
 }
 */
-
-

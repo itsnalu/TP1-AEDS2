@@ -1,12 +1,17 @@
-#include <stdio.h>
-#include <string.h>
 #include "Leitura_Arquivo.h"
 
+void Remove_Pontuacao(char *str) {
+    char *end = str + strlen(str) - 1;
+    if (end >= str && (*end == '.')) {
+        *end = '\0';
+    }
+}
 
-#define MAX_FILENAME_LENGTH 100
-#define MAX_CONTENT_LENGTH 1000
-#define MAX_INGREDIENTS 48
-#define MAX_INGREDIENT_LENGTH 100
+void Remove_Espaco(char *str) {
+    if (str[0] == ' ') {
+        memmove(str, str + 1, strlen(str));
+    }
+}
 
 int Contar_Ocorrencias(const char *string, const char *substring) {
     int count = 0;
@@ -20,8 +25,9 @@ int Contar_Ocorrencias(const char *string, const char *substring) {
     return count;
 }
 
-void lerEProcessarArquivo(const char *nomeArquivo) {
+void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
     FILE *arquivo = fopen(nomeArquivo, "r");
+    
     if (arquivo == NULL) {
         perror("Erro ao abrir o arquivo especificado");
         return;
@@ -75,5 +81,19 @@ void lerEProcessarArquivo(const char *nomeArquivo) {
         printf("-%s\n", ingredientes[j]);
     }
     printf("Modo de Preparo: %s\n", modoPreparo);
-    printf("testestestestes");
+
+
+    for (int k= 0; k < 46; k++)
+    {
+        //Não temos certeza se estamos armazenando corretamente no vetor ingredientes (quando tentatmos printar assim não funciona)
+        //Executar o código para ver o problema.
+        Remove_Espaco(ingredientes[k]);
+        Remove_Pontuacao(ingredientes[k]);
+        printf("%s\n", ingredientes[k]);
+        //Insere(ingredientes[k], p, T);
+        //printf("-%d\n", k);
+    }
+
+
+    
 }

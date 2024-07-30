@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Leitura_Arquivo.c"
-#include "TAD_Tabela_Hash.c"
-
+#include "Leitura_Arquivo.h"
 
 
 int main() {
     FILE *entrada;
     int numArquivos;
     char nomeArquivo[MAX_FILENAME_LENGTH];
+    
+    Vetor Tabela;
+    TipoPesos p;
+    Inicializa(Tabela);
+    GeraPesos(p);
 
     
     // Abrir o arquivo entrada.txt
@@ -36,7 +39,7 @@ int main() {
         }
 
         // Chamar a função para ler e processar o arquivo
-        lerEProcessarArquivo(nomeArquivo);
+        lerEProcessarArquivo(nomeArquivo, p, Tabela);
     }
 
 
@@ -44,20 +47,16 @@ int main() {
     // Fechar o arquivo entrada.txt
     fclose(entrada);
 
+    //Imprime(Tabela);
 
-    Vetor Tabela;
-    TipoPesos p;
-    Inicializa(Tabela);
-    
-    printf("lala\n");
-    GeraPesos(p);
 
-    
-    printf("lala\n");
 
-    char* palavras[] = {"banana", "abacaxi", "uva", "manga", "laranja", "melancia", "cereja", "pera", "maçã", "pêssego"};
+
+/* 
+    char* palavras[] = {"banana", "abacaxi", "uva", "manga", "laranja", "melancia", "cereja", "pera", "maca", "cavalo", "cebola"};
     int n = sizeof(palavras) / sizeof(palavras[0]);
 
+    printf("%d\n", n);
     printf("Inserindo palavras:\n");
     for (int i = 0; i < n; i++)
     {
@@ -65,8 +64,12 @@ int main() {
         Insere(palavras[i], p, Tabela);
     }
 
+    
+
     printf("\nTabela Hash após inserções:\n");
     Imprime(Tabela);
+
+    
 
     printf("\nPesquisando palavras:\n");
     for (int i = 0; i < n; i++)
@@ -85,7 +88,7 @@ int main() {
     }
 
     printf("\nTabela Hash após remoções:\n");
-    Imprime(Tabela);
+    Imprime(Tabela); */
 
 
     return 0;
