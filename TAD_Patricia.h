@@ -50,6 +50,7 @@ TipoArvore Insere(Palavra chave, TipoArvore t);
 int Pesquisa(Palavra chave, TipoArvore t);
 void Libera(TipoArvore t);
 //void ImprimeArvore(TipoArvore t, int nivel);
-void ImprimeArvore(TipoArvore t, int nivel, const char* direcao);
+//void ImprimeArvore(TipoArvore t, int nivel, const char* direcao);
+void ImprimeArvore_PreOrdem(TipoArvore t, int nivel, const char* direcao);
 
 #endif
