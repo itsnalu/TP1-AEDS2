@@ -38,8 +38,9 @@ int main() {
             return 1;
         }
 
-        // Chamar a função para ler e processar o arquivo
-        lerEProcessarArquivo(nomeArquivo, p, Tabela);
+            // Chamar a função para ler e processar o arquivo
+            lerEProcessarArquivo(nomeArquivo, p, Tabela);
+
     }
 
 

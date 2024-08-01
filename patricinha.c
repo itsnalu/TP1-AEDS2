@@ -3,10 +3,10 @@
 
 int main() {
     TipoArvore arvore = NULL;
-    Palavra palavrinha = (Palavra)malloc(100*sizeof(unsigned char));
     int qtd;
     printf("DIGITE A QUANTIDADE DE PALAVRINHAS: ");
     scanf("%d",&qtd);
+    Palavra palavrinha = (Palavra)malloc(100*sizeof(unsigned char));
     for(int i = 0; i < qtd; i++){
         printf("DIGITE A PALAVRINHA: ");
         scanf("%s", palavrinha);
