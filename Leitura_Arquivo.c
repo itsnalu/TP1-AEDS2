@@ -81,6 +81,7 @@ int contarCaracteresSegundaLinha(const char *nomeArquivo) {
     return numCaracteres;
 }
 
+
 char* Le_arquivo_inteiro(char *arquivo, int *tamanho) {
     char *buffer = NULL;
     FILE *arq;
@@ -111,50 +112,56 @@ char* Le_arquivo_inteiro(char *arquivo, int *tamanho) {
 
 
 void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
-    FILE *arquivo = fopen(nomeArquivo, "r");
-    
-    if (arquivo == NULL) {
-        perror("Erro ao abrir o arquivo especificado");
-        return;
-    }
-
-    int tamanho;
-    //printf("lalal\n");
+    int tamanho, indice, count[3] = {1,1,1};
     char *vetor = Le_arquivo_inteiro(nomeArquivo, &tamanho);
-    //printf("lala2\n");
     if (vetor == NULL) {
         perror("Erro ao ler o arquivo");
-        fclose(arquivo);
         return;
     }
 
 
+    // conta o tamanho de cada linha dentro do vetor com todas as linhas
+    indice = 0;
     for (int i = 0; i < tamanho; i++)
     {
-        printf("%c", vetor[i]);
+        if (vetor[i] == '\n')
+        {
+            indice+=1;
+        }
+        count[indice] += 1;
     }
 
+    char *linha = strtok(vetor, "\n");
+    int linhaAtual = 0;
+
+    char nome[count[0]];
+    char ingredientes[count[1]];
+    char instrucoes[count[2]];
+
+    while (linha != NULL) {
+        if (linhaAtual == 0) {
+            strncpy(nome, linha, sizeof(nome) - 1);
+            nome[sizeof(nome) - 1] = '\0'; // garante a terminação nula
+        } else if (linhaAtual == 1) {
+            strncpy(ingredientes, linha, sizeof(ingredientes) - 1);
+            ingredientes[sizeof(ingredientes) - 1] = '\0'; // garante a terminação nula
+        } else {
+            strncat(instrucoes, linha, sizeof(instrucoes) - strlen(instrucoes) - 1);
+            strncat(instrucoes, "\n", sizeof(instrucoes) - strlen(instrucoes) - 1);
+        }
+
+        linha = strtok(NULL, "\n");
+        linhaAtual++;
+    }
+    printf("Nome:%s\n", nome);
+    printf("Ingredientes:%s\n", ingredientes);
+    printf("Instrucoes:%s\n", instrucoes);
+
     
 
-
-/*     for (int k= 0; k < 46; k++)
-    {
-        //Não temos certeza se estamos armazenando corretamente no vetor ingredientes (quando tentatmos printar assim não funciona)
-        //Executar o código para ver o problema.
-        Remove_Espaco(vetor[k]);
-        Remove_Pontuacao(vetor[k]);
-        printf("%s\n", ingredientes[k]);
-        //Insere(ingredientes[k], p, T);
-        //printf("-%d\n", k);
-    } */
-    
-
-
+    // Liberar a memória alocada
+    free(vetor);
 }
-
-
-
-
 
 
 

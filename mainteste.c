@@ -5,7 +5,6 @@
 
 
 int main() {
-    FILE *entrada;
     int numArquivos;
     char nomeArquivo[MAX_FILENAME_LENGTH];
     
@@ -14,9 +13,10 @@ int main() {
     Inicializa(Tabela);
     GeraPesos(p);
 
-    
+
+
     // Abrir o arquivo entrada.txt
-    entrada = fopen("entrada.txt", "r");
+    FILE *entrada = fopen("entrada.txt", "r");
     if (entrada == NULL) {
         perror("Erro ao abrir o arquivo entrada.txt");
         return 1;
@@ -29,29 +29,34 @@ int main() {
         return 1;
     }
 
+
     // Loop para ler e abrir cada arquivo especificado
     for (int i = 0; i < numArquivos; i++) {
-        // Ler o nome do arquivo
+        // Ler o nome do arquivo do arquivo entrada.txt
         if (fscanf(entrada, "%s", nomeArquivo) != 1) {
             perror("Erro ao ler o nome do arquivo");
             fclose(entrada);
             return 1;
         }
 
+        
+        // Abrir o arquivo
+        FILE *arquivo = fopen(nomeArquivo, "r");
+        if (arquivo == NULL) {
+            perror("Erro ao abrir o arquivo");
+            continue; // Pula para a próxima iteração do loop
+        }
 
-        // Chamar a função para ler e processar o arquivo
-        //printf("lalaantesl\n");
-        lerEProcessarArquivo(nomeArquivo, p, Tabela);
-        //printf("lalaantes2\n");
+        // Chamar a função Armazenar
+        Armazenar(nomeArquivo, p, Tabela);
+        printf("%d\n", i);
+        // Fechar o arquivo
+        fclose(arquivo);
     }
 
 
-
-    // Fechar o arquivo entrada.txt
-    fclose(entrada);
-
-    //Imprime(Tabela);
-
+    fclose(entrada); // Fechar o arquivo entrada.txt
+}
 
 
 
@@ -92,8 +97,4 @@ int main() {
 
     printf("\nTabela Hash após remoções:\n");
     Imprime(Tabela); */
-
-
-    return 0;
-}
 
