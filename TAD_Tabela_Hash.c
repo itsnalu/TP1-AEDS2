@@ -1,13 +1,5 @@
 #include "TAD_Tabela_Hash.h"
 
-void To_Lower_Case(char *str)
-{
-    while (*str)
-    {
-        *str = tolower(*str);
-        str++;
-    }
-}
 
 void FL_Vazia(Tabela_Hash *Lista)
 {

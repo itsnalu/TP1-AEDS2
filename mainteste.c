@@ -54,6 +54,7 @@ int main() {
         fclose(arquivo);
     }
 
+    Imprime(Tabela);
 
     fclose(entrada); // Fechar o arquivo entrada.txt
 }

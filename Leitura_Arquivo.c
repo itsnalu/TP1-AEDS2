@@ -1,24 +1,74 @@
 #include "Leitura_Arquivo.h"
 
-void Inicializa_Campo(Campos_Arquivo Campo){
+void To_Lower_Case(char *str)
+{
+    while (*str)
+    {
+        *str = tolower(*str);
+        str++;
+    }
+}
+
+void Inicializa_Campo(Campos_Arquivo Campo)
+{
     Campo.ingredientes = NULL;
     Campo.receita = NULL;
     Campo.nIngredientes = 0;
 }
 
-int Contar_Ocorrencias(const char *string, const char *substring) {
-    int count = 0;
-    const char *temp = string;
-    
-    while ((temp = strstr(temp, substring)) != NULL) {
-        count++;
-        temp += strlen(substring); //Próxima contagem vai começar a partir de onde achou a primeira ocorrência :p
+void Remove_Pontuacao(char *str) {
+    char *end = str + strlen(str) - 1;
+    if (end >= str && (*end == '.')) {
+        *end = '\0';
     }
-    
+}
+
+void Remove_Espaco(char *str) {
+    if (str[0] == ' ') {
+        memmove(str, str + 1, strlen(str));
+    }
+}
+
+void remover_espacos_fim(char *str) {
+    int i = strlen(str) - 1;
+    while (i >= 0 && str[i] == ' ') {
+        str[i] = '\0';
+        i--;
+    }
+}
+
+// int Contar_Ocorrencias(const char *string, const char *substring)
+// {
+//     int count = 0;
+//     const char *temp = string;
+
+//     while ((temp = strstr(temp, substring)) != NULL)
+//     {
+//         count++;
+//         temp += strlen(substring); // Próxima contagem vai começar a partir de onde achou a primeira ocorrência :p
+//     }
+
+//     return count;
+// }
+
+
+int Contar_Ingrediente(char* string,int tamanho){
+    int count = 0;
+    for (int i = 0; i < tamanho; i++)
+    {
+        if (string[i] == ';')   
+        {
+            count++;
+        }
+        
+    }
+    count++;
     return count;
 }
 
-int Compara_Caractere(const FILE *arq, const char *str) {
+
+int Compara_Caractere(const FILE *arq, const char *str)
+{
     int count = 0;
     int tamanhoString = strlen(str);
     int ContadorCorrespondencia = 0;
@@ -26,16 +76,21 @@ int Compara_Caractere(const FILE *arq, const char *str) {
 
     FILE *arqCopy = (FILE *)arq;
     // Loop para ler o arquivo caractere por caractere
-    while ((caractere = fgetc(arqCopy)) != EOF) {
-        if (caractere == str[ContadorCorrespondencia]) {
+    while ((caractere = fgetc(arqCopy)) != EOF)
+    {
+        if (caractere == str[ContadorCorrespondencia])
+        {
             // Se o caractere corresponde ao da string, incrementa o contador de correspondência
             ContadorCorrespondencia++;
-            if (ContadorCorrespondencia == tamanhoString) {
+            if (ContadorCorrespondencia == tamanhoString)
+            {
                 // Se todos os caracteres da string foram encontrados, incrementa o contador de ocorrências
                 count++;
                 ContadorCorrespondencia = 0; // Reinicia o contador de correspondência para procurar novas ocorrências
             }
-        } else {
+        }
+        else
+        {
             // Se o caractere não corresponde, reinicia o contador de correspondência
             ContadorCorrespondencia = 0;
         }
@@ -45,49 +100,35 @@ int Compara_Caractere(const FILE *arq, const char *str) {
 }
 
 
+int Contar_Ocorrencias(char *texto, char *ingrediente)
+{
+    int count = 0;
+    int tamanhoIngrediente = strlen(ingrediente);
+    char *posicao = texto;
 
-int contarCaracteresSegundaLinha(const char *nomeArquivo) {
-    FILE *arquivo = fopen(nomeArquivo, "r");
-    
-    if (arquivo == NULL) {
-        perror("Erro ao abrir o arquivo especificado");
-        return -1;
+    // Loop para ler o arquivo caractere por caractere
+    while ((posicao = strstr(posicao, ingrediente)) != NULL)
+    {
+        // verifica se nas extremidades da string tem um espaço ou se é o final da string
+        if ((posicao == texto || *(posicao - 1) == ' ') && (*(posicao + tamanhoIngrediente) == ' ' || *(posicao + tamanhoIngrediente) == '\0'))
+        {
+            count++;
+        }
+        posicao += tamanhoIngrediente;
     }
 
-    char linha[1024]; // Buffer para armazenar cada linha do arquivo
-
-    // Ler e descartar a primeira linha
-    if (fgets(linha, sizeof(linha), arquivo) == NULL) {
-        perror("Erro ao ler a primeira linha");
-        fclose(arquivo);
-        return -1;
-    }
-
-    // Ler a segunda linha
-    if (fgets(linha, sizeof(linha), arquivo) == NULL) {
-        perror("Erro ao ler a segunda linha");
-        fclose(arquivo);
-        return -1;
-    }
-
-    fclose(arquivo);
-
-    // Contar o número de caracteres na segunda linha
-    int numCaracteres = 0;
-    while (linha[numCaracteres] != '\0' && linha[numCaracteres] != '\n') {
-        numCaracteres++;
-    }
-
-    return numCaracteres;
+    return count;
 }
 
 
-char* Le_arquivo_inteiro(char *arquivo, int *tamanho) {
+char *Le_arquivo_inteiro(char *arquivo, int *tamanho)
+{
     char *buffer = NULL;
     FILE *arq;
-    
+
     arq = fopen(arquivo, "rb");
-    if (arq == NULL) {
+    if (arq == NULL)
+    {
         printf("Não foi possível abrir o arquivo");
         return NULL;
     }
@@ -96,29 +137,30 @@ char* Le_arquivo_inteiro(char *arquivo, int *tamanho) {
     fseek(arq, 0, SEEK_SET);
 
     buffer = (char *)malloc(*tamanho + 1);
-    if (buffer == NULL) {
+    if (buffer == NULL)
+    {
         printf("Não foi possível alocar memória");
         fclose(arq);
         return NULL;
     }
 
     fread(buffer, 1, *tamanho, arq);
-    buffer[*tamanho] = '\0'; 
+    buffer[*tamanho] = '\0';
 
     fclose(arq);
 
     return buffer;
 }
 
-
-void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
-    int tamanho, indice, count[3] = {1,1,1};
+void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T)
+{
+    int tamanho, indice, count[3] = {1, 1, 1};
     char *vetor = Le_arquivo_inteiro(nomeArquivo, &tamanho);
-    if (vetor == NULL) {
+    if (vetor == NULL)
+    {
         perror("Erro ao ler o arquivo");
         return;
     }
-
 
     // conta o tamanho de cada linha dentro do vetor com todas as linhas
     indice = 0;
@@ -126,7 +168,7 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
     {
         if (vetor[i] == '\n')
         {
-            indice+=1;
+            indice += 1;
         }
         count[indice] += 1;
     }
@@ -138,14 +180,20 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
     char ingredientes[count[1]];
     char instrucoes[count[2]];
 
-    while (linha != NULL) {
-        if (linhaAtual == 0) {
+    while (linha != NULL)
+    {
+        if (linhaAtual == 0)
+        {
             strncpy(nome, linha, sizeof(nome) - 1);
             nome[sizeof(nome) - 1] = '\0'; // garante a terminação nula
-        } else if (linhaAtual == 1) {
+        }
+        else if (linhaAtual == 1)
+        {
             strncpy(ingredientes, linha, sizeof(ingredientes) - 1);
             ingredientes[sizeof(ingredientes) - 1] = '\0'; // garante a terminação nula
-        } else {
+        }
+        else
+        {
             strncat(instrucoes, linha, sizeof(instrucoes) - strlen(instrucoes) - 1);
             strncat(instrucoes, "\n", sizeof(instrucoes) - strlen(instrucoes) - 1);
         }
@@ -158,7 +206,70 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
     printf("Instrucoes:%s\n", instrucoes);
 
     
+    int qtdIngrediente = Contar_Ingrediente(ingredientes, count[1]);
 
+
+    FILE *arquivo = fopen(nomeArquivo, "r");
+    if (arquivo == NULL)
+    {
+        perror("Erro ao abrir o arquivo especificado");
+        return;
+    }
+    //tamanho delimitado para o ingrediente
+    char ingrediente_individual[40];
+    //char *Ingrediente_tratado;
+    //fgets(ingrediente_individual, 1000, arquivo);
+    
+    // //Descarta a primeira linha
+    // char buffer[1024];
+    // if (fgets(buffer, sizeof(buffer), arquivo) == NULL) {
+    //     perror("Erro ao ler a primeira linha");
+
+    // }
+
+    while ((fscanf(arquivo, "%[^.;]", ingrediente_individual)) == 1)
+    {
+        //Ingrediente_tratado = strdup(ingrediente_individual);
+        //remover_espacos_fim(Ingrediente_tratado);
+        //printf("tamanho do ingrediente_tratado: %d\n",(40 - strlen(ingrediente_individual) + 1));
+        Remove_Espaco(ingrediente_individual);
+        To_Lower_Case(ingrediente_individual);
+        Insere(ingrediente_individual, p, T);
+    }
+
+
+/*     char *CadaIngrediente;
+    char *tempString = strdup(ingredientes);
+    for (int i = 0; i < qtdIngrediente; i++)
+    {
+        //tempString = strdup(ingredientes);
+        CadaIngrediente = strtok(tempString, ";");
+        printf("Ingrediente atual: %s\n", CadaIngrediente);
+        if (CadaIngrediente != NULL)
+        {
+            //To_Lower_Case(CadaIngrediente);
+            //Remove_Espaco(CadaIngrediente);
+            //Remove_Pontuacao(CadaIngrediente);
+            Campos.ingredientes[i] = strdup(CadaIngrediente);        
+        }
+        free(tempString);
+    }
+
+    for (int i = 0; i < qtdIngrediente; i++)
+    {
+        printf("Ingrediente %d: %s\n", i + 1, Campos.ingredientes[i]);
+    } */
+
+
+    
+    
+    // while (fscanf(nomeArquivo, "%[^.;]", ingrediente) == 1) {
+    //     qtd_ingrediente = 0;
+    //     Letra_Minuscula(ingrediente);
+    //     qtd_ingrediente = Frequencia_Ingrediente(receita_str, ingrediente);
+        //printf("Qtd do ingrediente %s no doc(%d): %d\n", ingrediente, id_do
+    // }
+    
     // Liberar a memória alocada
     free(vetor);
 }
@@ -166,27 +277,10 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
+/*
 void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
     FILE *arquivo = fopen(nomeArquivo, "r");
-    
+
     if (arquivo == NULL) {
         perror("Erro ao abrir o arquivo especificado");
         return;
@@ -213,7 +307,7 @@ void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) 
         return;
     }
 
-    
+
 
     linhaIngredientes[strcspn(linhaIngredientes, "\n")] = 0; // Remover nova linha
 
@@ -256,42 +350,17 @@ void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) 
         //Insere(ingredientes[k], p, T);
         //printf("-%d\n", k);
     }
-    
+
 }
 
 
 
   */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
+/*
 void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
     arq *arquivo = fopen(nomeArquivo, "r");
-    
+
     if (arquivo == NULL) {
         perror("Erro ao abrir o arquivo especificado");
         return;
@@ -306,7 +375,7 @@ void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) 
     }
 
     // (fscanf(entrada, "%d", &numArquivos) != 1)
-    
+
     char vetorIngrediente[MAX_INGREDIENTS][MAX_INGREDIENT_tamanho];
     char **ingredientes = (char **)malloc(MAX_INGREDIENTS * sizeof(char *));
     for (int i = 0; i < MAX_INGREDIENTS; i++) {
@@ -408,7 +477,7 @@ void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) 
 }
 
 
-/* 
+/*
 
 int contar_Elementos_Na_Linha(char* linha){
     int count = 0;
@@ -436,9 +505,6 @@ int contar_Tamanho_Do_Ingrediente(char* linha, int qualIngrediente){
 
 */
 
-
-
-
 /* void Remove_Pontuacao(char *str) {
     char *end = str + strlen(str) - 1;
     if (end >= str && (*end == '.')) {
@@ -454,15 +520,14 @@ int contar_Tamanho_Do_ModoPreparo(char* linha){
     }
     return -1;
 };
- 
+
 
 void Remove_Espaco(char *str) {
     if (str[0] == ' ') {
         memmove(str, str + 1, strlen(str));
     }
-} 
+}
 */
-
 
 /* void lerEProcessarArquivo(const char *nomeArquivo, TipoPesos p, Tabela_Hash* T) {
     arq *arquivo = fopen(nomeArquivo, "r");
@@ -485,7 +550,7 @@ void Remove_Espaco(char *str) {
     if (tamanho_ingredientes == -1) {
         fclose(arquivo);
         return;
-    }    
+    }
 
     //char *ingredientes = (char *)malloc((tamanho_ingredientes + 1) * sizeof(char));
     if (ingredientes == NULL) {
@@ -538,6 +603,6 @@ void Remove_Espaco(char *str) {
     }
     free(campos.ingredientes); // Liberar a memória do vetor de ingredientes
     free(ingredientes); // Liberar a memória alocada para a linha de ingredientes
-    
+
 }
  */

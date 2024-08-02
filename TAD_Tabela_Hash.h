@@ -46,7 +46,6 @@ typedef unsigned int TipoIndice;
 
 
 
-void to_Lower_Case(char *str);
 void FL_Vazia(Tabela_Hash *Lista);
 short Vazia(Tabela_Hash Lista);
 void Ins(Palavra x, Tabela_Hash *Lista);

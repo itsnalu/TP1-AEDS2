@@ -33,7 +33,8 @@ typedef struct Campos_Arquivo
 char* Le_arquivo_inteiro(char *arquivo, int *tamanho);
 int contarCaracteresSegundaLinha(const char *nomeArquivo);
 void Inicializa_Campo(Campos_Arquivo Campo);
-int Contar_Ocorrencias(const char *string, const char *substring);
+int Contar_Ocorrencias(char *texto, char *ingrediente);
 void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash* T);
 void Remove_Espaco(char *str);
 void Remove_Pontuacao(char *str);
+void To_Lower_Case(char *str);
