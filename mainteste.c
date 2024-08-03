@@ -48,7 +48,7 @@ int main() {
         }
 
         // Chamar a função Armazenar
-        Armazenar(nomeArquivo, p, Tabela);
+        Armazenar(nomeArquivo, p, Tabela, (i+1));
         printf("%d\n", i);
         // Fechar o arquivo
         fclose(arquivo);

@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -46,6 +45,8 @@ typedef unsigned int TipoIndice;
 
 
 
+void FIndice_Invertido(Indice_Invertido *Lista);
+void InsereIndice_Invertido(int qtde, int idDoc, Indice_Invertido **Lista);
 void FL_Vazia(Tabela_Hash *Lista);
 short Vazia(Tabela_Hash Lista);
 void Ins(Palavra x, Tabela_Hash *Lista);

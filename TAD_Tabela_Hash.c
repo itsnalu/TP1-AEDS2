@@ -10,6 +10,40 @@ void FL_Vazia(Tabela_Hash *Lista)
     Lista->Primeiro->Indices = NULL;
 }
 
+void FIndice_Invertido(Indice_Invertido *Lista)
+{
+    Lista->proxInd = NULL;
+    Lista->idDoc = 0;
+    Lista->qtde = 0;
+}
+/*
+int qtde;
+int idDoc;
+struct Indice_Invertido* proxInd;
+*/
+
+void InsereIndice_Invertido(int qtde, int idDoc, Indice_Invertido **Lista)
+{
+    Indice_Invertido *novo = (Indice_Invertido *)malloc(sizeof(Indice_Invertido));
+    novo->idDoc = idDoc;
+    novo->qtde = qtde;
+    novo->proxInd = NULL;
+
+    if (*Lista == NULL)
+    {
+        *Lista = novo;
+    }
+    else
+    {
+        Indice_Invertido *atual = *Lista;
+        while (atual->proxInd != NULL)
+        {
+            atual = atual->proxInd;
+        }
+        atual->proxInd = novo;
+    }
+}
+
 short Vazia(Tabela_Hash Lista)
 {
     return (Lista.Primeiro == Lista.Ultimo);

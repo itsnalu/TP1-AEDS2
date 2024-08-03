@@ -58,6 +58,7 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "leitura_arquivo.h": "c",
-    "tad_tabela_hash.h": "c"
+    "tad_tabela_hash.h": "c",
+    "tad_patricia.h": "c"
   }
 }
