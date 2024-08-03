@@ -14,19 +14,25 @@ int main() {
         arvore = Insere(palavrinha, arvore);
     }
     */
-
+    
     Palavra palavra1 = (Palavra)"casca";
     Palavra palavra2 = (Palavra)"casco";
     Palavra palavra3 = (Palavra)"cascalho";
     Palavra palavra4 = (Palavra)"cascavel";
-    arvore = Insere(palavra1, arvore);
-    arvore = Insere(palavra2, arvore);
-    arvore = Insere(palavra3, arvore);
-    arvore = Insere(palavra4, arvore);
+    arvore = Insere(palavra1, &arvore);
+    arvore = Insere(palavra2, &arvore);
+    arvore = Insere(palavra3, &arvore);
+    arvore = Insere(palavra4, &arvore);
 
     printf("Arvore sera impressa: \n");
-    ImprimeArvore(arvore, 0, NULL);
-    //ImprimeArvore_PreOrdem(arvore,0,NULL); // Começa da raiz por isso 0, direção null pq é a raiz
+    ImprimeEmOrdem(arvore);
+    ImprimeEmOrdemComInternos(arvore);
+
+    //ImprimeEmOrdemComDirecao(arvore);
+    //O imprime em ordem com direcao primeiro imprime a raiz e depois em ordem.(isso pode deixar confuso).
+
+
     //free(palavrinha);
     return 0;
+    
 }

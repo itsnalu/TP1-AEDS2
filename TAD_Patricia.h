@@ -44,13 +44,18 @@ typedef struct Indice_Invertido
 } Indice_Invertido;
 
 TipoArvore CriaNoExterno(Palavra chave);
-TipoArvore CriaNoInterno(TipoIndexAmp index, unsigned char caractere, TipoArvore Esq, TipoArvore Dir);
-TipoArvore InsereEntre(Palavra chave, TipoArvore t, TipoIndexAmp index, unsigned char caractere);
-TipoArvore Insere(Palavra chave, TipoArvore t);
+TipoArvore CriaNoInterno(TipoIndexAmp index, TipoArvore *Esq, TipoArvore *Dir, unsigned char caractere);
+TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere);
+TipoArvore Insere(Palavra k, TipoArvore *t);
 int Pesquisa(Palavra chave, TipoArvore t);
 void Libera(TipoArvore t);
-//void ImprimeArvore(TipoArvore t, int nivel);
-//void ImprimeArvore(TipoArvore t, int nivel, const char* direcao);
-void ImprimeArvore_PreOrdem(TipoArvore t, int nivel, const char* direcao);
+void ImprimeEmOrdemAux(TipoArvore t);
+void ImprimeEmOrdem(TipoArvore t);
+
+void ImprimeEmOrdemAuxComDirecao(TipoArvore t, const char* direcao);
+void ImprimeEmOrdemComDirecao(TipoArvore t);
+
+void ImprimeEmOrdemAuxComInternos(TipoArvore t);
+void ImprimeEmOrdemComInternos(TipoArvore t);
 
 #endif
