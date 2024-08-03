@@ -1,5 +1,4 @@
 #include "TAD_Patricia.h"
-#include "Leitura_Arquivo_Patricia.h"
 
 int main() {
     TipoArvore arvore = NULL;
@@ -19,17 +18,31 @@ int main() {
     Palavra palavra2 = (Palavra)"casco";
     Palavra palavra3 = (Palavra)"cascalho";
     Palavra palavra4 = (Palavra)"cascavel";
+    Palavra palavra5 = (Palavra)"casce"; 
+    Palavra palavra6 = (Palavra)"canalha"; 
+    Palavra palavra7 = (Palavra)"alesia";
+    Palavra palavra8 = (Palavra)"alexia";
+    Palavra palavra9 = (Palavra)"aa";
+    Palavra palavra10 = (Palavra)"a";
+
     arvore = Insere(palavra1, &arvore);
     arvore = Insere(palavra2, &arvore);
     arvore = Insere(palavra3, &arvore);
     arvore = Insere(palavra4, &arvore);
+    arvore = Insere(palavra5, &arvore); 
+    arvore = Insere(palavra6, &arvore); 
+    arvore = Insere(palavra7, &arvore);
+    arvore = Insere(palavra8, &arvore);
+    arvore = Insere(palavra9, &arvore);
+    arvore = Insere(palavra10, &arvore);
 
-    printf("Arvore sera impressa: \n");
+    printf("Arvore sera impressa em ordem sem internos: \n");
     ImprimeEmOrdem(arvore);
+    printf("Arvore sera impressa em ordem com internos: \n");
     ImprimeEmOrdemComInternos(arvore);
+    printf("Arvore sera impressa em pre ordem com internos: \n");
+    ImprimePreOrdem(arvore);
 
-    //ImprimeEmOrdemComDirecao(arvore);
-    //O imprime em ordem com direcao primeiro imprime a raiz e depois em ordem.(isso pode deixar confuso).
 
 
     //free(palavrinha);

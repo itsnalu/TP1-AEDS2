@@ -52,10 +52,10 @@ void Libera(TipoArvore t);
 void ImprimeEmOrdemAux(TipoArvore t);
 void ImprimeEmOrdem(TipoArvore t);
 
-void ImprimeEmOrdemAuxComDirecao(TipoArvore t, const char* direcao);
-void ImprimeEmOrdemComDirecao(TipoArvore t);
-
 void ImprimeEmOrdemAuxComInternos(TipoArvore t);
 void ImprimeEmOrdemComInternos(TipoArvore t);
+
+void ImprimePreOrdem(TipoArvore t);
+void ImprimePreOrdemAux(TipoArvore t, int nivel);
 
 #endif
