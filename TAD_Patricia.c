@@ -64,6 +64,7 @@ TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere)
 
 
 
+
 TipoArvore Insere(Palavra k, TipoArvore *t)
 {
     TipoArvore p;
@@ -88,23 +89,16 @@ TipoArvore Insere(Palavra k, TipoArvore *t)
         i = 0;
         while (tolower(k[i]) == tolower(p->NO.Chave[i]) && i <= strlen(k))
             i++;
-
+        
         letra_dif=k[i];
 
-        if (i > strlen(k))
+        if (k[i] == '\0' && p->NO.Chave[i] == '\0')
         {
             printf("Erro: chave ja esta na arvore\n");
             return (*t); //Chave já existente na arvore, portanto nao insere. retorna a arvore original
         }
-        else{
-            if(k[i] > p->NO.Chave[i]){
-                return InsereEntre(k, t, i, k[i]); //Funcao para inserir entre os nós(será necessário criar nó interno)
-            }
-            else{
-                return InsereEntre(k, t, i, p->NO.Chave[i]);
-            }
-
-        }
+        else
+            return InsereEntre(k, t, i, letra_dif); // Supondo que essa função insere entre os nós
     }
 }
 
@@ -159,6 +153,10 @@ void ImprimeEmOrdem(TipoArvore t) {
     ImprimeEmOrdemAux(t);
 }
 
+
+
+
+
 void ImprimeEmOrdemAuxComDirecao(TipoArvore t, const char* direcao) {
     if (t != NULL) {
         if (EExterno(t)) {
@@ -171,18 +169,7 @@ void ImprimeEmOrdemAuxComDirecao(TipoArvore t, const char* direcao) {
     }
 }
 
-void ImprimeEmOrdemComDirecao(TipoArvore t) {
-    ImprimeEmOrdemAuxComDirecao(t, "Raiz");
-}
 
-int ArvoreVazia(TipoArvore t) {
-    if(t == NULL){
-        return 1;
-    }
-    return 0;
-}
-
-/* Função auxiliar para imprimir a árvore em ordem com a direção dos nós */
 void ImprimeEmOrdemAuxComInternos(TipoArvore t) {
     if (t != NULL) {
         if (!EExterno(t)) {
@@ -208,4 +195,3 @@ void ImprimeEmOrdemAuxComInternos(TipoArvore t) {
 void ImprimeEmOrdemComInternos(TipoArvore t) {
     ImprimeEmOrdemAuxComInternos(t);
 }
-
