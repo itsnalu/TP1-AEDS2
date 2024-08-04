@@ -1,3 +1,10 @@
+/*
+Alexia Karoline Augusta Germano Silva [EF05373] 
+Ana Luisa Moreira Rodrigues [EF05389] 
+Dalmo Nolasco Dantas Rainer [EF05361] 
+Lucas da Costa Moreira [EF05377]
+*/
+
 #include "TAD_Patricia.h"
 #include <string.h>
 

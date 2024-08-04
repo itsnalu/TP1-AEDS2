@@ -63,6 +63,8 @@
     "time.h": "c",
     "leitura_arquivo_patricia.h": "c",
     "leitura_arquivo_hash.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "indice_hash.h": "c",
+    "indice_patricia.h": "c"
   }
 }

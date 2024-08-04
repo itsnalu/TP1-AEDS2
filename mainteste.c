@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Leitura_Arquivo_Hash.h"
-#include "Leitura_Arquivo_Patricia.h"
+#include "Indice_Hash.h"
+//#include "Indice_Patricia.h"
 
 
 int main() {
     int numArquivos;
     char nomeArquivo[MAX_FILENAME_LENGTH];
     
-    TipoArvore arvore = NULL;
+    //TipoArvore arvore = NULL;
     int totalIngredientes;
     int totalDocs;
     Vetor Tabela;
@@ -59,11 +59,29 @@ int main() {
         //Armazenar_Patricia(nomeArquivo, &arvore, (i+1));
         
         
-        printf("%d\n", i);
+        // printf("%d\n", i);
         // Fechar o arquivo
         fclose(arquivo);
     }
 
+    Imprime(Tabela);
+
+
+    char *Ingrediente;
+    Ingrediente = (char*) malloc(100 * sizeof(char));
+    do
+    {
+        printf("Digite o ingrediente (Digite 0 para voltar ao menu): ");
+        if (fgets(Ingrediente, 100, stdin) != NULL) {
+            size_t len = strlen(Ingrediente);
+            if (len > 0 && Ingrediente[len - 1] == '\n') {
+                Ingrediente[len - 1] = '\0';  // Remove o caractere de nova linha
+            }
+        }
+        printf("%s: ", Ingrediente);   
+        Imprimir_IndiceInvertido_Hash(Ingrediente, p, Tabela);
+    } while (Ingrediente[0] != '0');
+    
 
     calcularTFIDFParaTodos(Tabela, totalDocs, TermosporArquivo);
 
@@ -80,7 +98,7 @@ int main() {
 
     // int lala = ArvoreVazia(arvore);
     // printf("%d\n", lala);
-    // // Imprime(Tabela);
+
     // ImprimeEmOrdem(arvore);
     // ImprimeEmOrdemComInternos(arvore);
 

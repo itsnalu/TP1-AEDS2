@@ -1,9 +1,23 @@
+/*
+Alexia Karoline Augusta Germano Silva [EF05373] 
+Ana Luisa Moreira Rodrigues [EF05389] 
+Dalmo Nolasco Dantas Rainer [EF05361] 
+Lucas da Costa Moreira [EF05377]
+*/
+
+#ifndef TAD_TABELA_HASH_H
+#define TAD_TABELA_HASH_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
 #include <ctype.h> // biblioteca para tolower
+#include <math.h> // biblioteca para pow
+
+//#include "Indice_Hash.h"
+
 #define N 46
 //Utilizando a formula para calcular o M = alpha/N, sendo alpha 3 e N 46
 // O resultado deu ~15,333 e foi arredondado para 17 (o número primo mais próximo)
@@ -60,3 +74,4 @@ void Retira(Palavra_Hash x, TipoPesos p, Vetor T);
 void Imp(Tabela_Hash Lista);
 void Imprime(Vetor Tabela);
 
+#endif

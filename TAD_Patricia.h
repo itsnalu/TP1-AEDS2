@@ -1,3 +1,10 @@
+/*
+Alexia Karoline Augusta Germano Silva [EF05373] 
+Ana Luisa Moreira Rodrigues [EF05389] 
+Dalmo Nolasco Dantas Rainer [EF05361] 
+Lucas da Costa Moreira [EF05377]
+*/
+
 #ifndef TAD_PATRICIA_H
 #define TAD_PATRICIA_H
 
@@ -30,7 +37,7 @@ typedef struct TipoPatNo
             unsigned char Caractere;
         } NInterno;
         Palavra Chave;
-        
+        // struct Indice_Invertido_Patricia *Indices;
     } NO;
     
 } TipoPatNo;
@@ -40,9 +47,9 @@ typedef struct Indice_Invertido* Apontador_Ind;
 
 typedef struct Indice_Invertido_Patricia
 {
-    int qtde;
-    int idDoc;
-    Apontador_Ind proxInd;
+    int qtde; //Quantidade de repeticoes
+    int idDoc; //identificador do document
+    Apontador_Ind *proxInd;
 } Indice_Invertido_Patricia;
 
 TipoArvore CriaNoExterno(Palavra chave);
@@ -59,4 +66,5 @@ void ImprimeEmOrdemAuxComInternos(TipoArvore t);
 void ImprimeEmOrdemComInternos(TipoArvore t);
 
 int ArvoreVazia(TipoArvore t);
+
 #endif

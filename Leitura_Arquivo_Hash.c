@@ -1,5 +1,13 @@
+/*
+Alexia Karoline Augusta Germano Silva [EF05373] 
+Ana Luisa Moreira Rodrigues [EF05389] 
+Dalmo Nolasco Dantas Rainer [EF05361] 
+Lucas da Costa Moreira [EF05377]
+*/
+
 #include "Leitura_Arquivo_Hash.h"
-#include <math.h>
+#include "Indice_Hash.h"
+
 
 void To_Lower_Case(char *str)
 {
@@ -224,6 +232,7 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j, int *termo
         Remove_Pontuacao(ingrediente_individual);
         //printf("Ingrediente tratado: %s\n", ingrediente_individual);
         Insere_Hash(ingrediente_individual, p, T);
+
         Ocorrencias_Hash(instrucoes, nome, ingrediente_individual, j, p, T);
 
 
@@ -248,69 +257,44 @@ void Ocorrencias_Hash(char *texto, char *nome, char *ingrediente, int j, TipoPes
 
 }
 
-void Imprimir_IndiceInvertido_Hash(char *ingrediente, TipoPesos p, Tabela_Hash *T)
-{
-    Apontador_Prox ap;
-    ap = Pesquisa_Hash(ingrediente, p, T);
-
-    if (ap == NULL)
-    {
-        printf("O ingrediente %s não foi encontrado\n", ingrediente);
-        return;
-    }
-    printf("Qtd,idDoc\n");
-    printf("%s: ", ingrediente);
-    while (ap->Indices != NULL)
-    {
-        printf("<%d, %d> ", ap->Indices->qtde, ap->Indices->idDoc);
-        ap->Indices = ap->Indices->proxInd;
-    }
-    printf("\n");
-}
-
-double calcularTF(int qtdeTermo, int totalTermos) {
-    return (double)qtdeTermo / totalTermos;
-}
-
-
-double calcularIDF(int totalDocs, int docsComTermo) {
-    return log((double)totalDocs / (docsComTermo));
-}
 
 double calcularTFIDF(int qtdeTermo, int totalTermos, int totalDocs, int docsComTermo) {
-    double tf = calcularTF(qtdeTermo, totalTermos);
-    double idf = calcularIDF(totalDocs, docsComTermo);
+    double tf = (double)qtdeTermo / totalTermos;
+    double idf = log((double)totalDocs / (docsComTermo + 1));
     return tf * idf;
 }
 
 void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc) {
-    Tipo_Celula *celulaAtual = tabela->Primeiro;
-    
-    while (celulaAtual != NULL) {
-        Indice_Invertido *indiceAtual = celulaAtual->Indices;
+    for (int i = 0; i < M; i++) { // Percorre todos os índices da tabela hash
+        Tipo_Celula *celulaAtual = tabela[i].Primeiro;
         
-        while (indiceAtual != NULL) {
-            int qtdeTermo = indiceAtual->qtde;
-            int idDoc = indiceAtual->idDoc;
-            int totalTermos = totalTermosPorDoc[idDoc - 1];
-            int docsComTermo = 0;
-            
-            // Contar em quantos documentos o termo aparece
-            Indice_Invertido *aux = celulaAtual->Indices;
-            while (aux != NULL) {
-                if (aux->qtde > 0) {
-                    docsComTermo++;
+        while (celulaAtual != NULL) {
+            Indice_Invertido *indiceAtual = celulaAtual->Indices;
+            printf("Ingrediente: %s\n", celulaAtual->Ingrediente);
+
+            while (indiceAtual != NULL) {
+                int qtdeTermo = indiceAtual->qtde;
+                int idDoc = indiceAtual->idDoc;
+                int totalTermos = totalTermosPorDoc[idDoc - 1];
+                int docsComTermo = 0;
+                
+                // Contar em quantos documentos o termo aparece
+                Indice_Invertido *aux = celulaAtual->Indices;
+                while (aux != NULL) {
+                    if (aux->qtde > 0) {
+                        docsComTermo++;
+                    }
+                    aux = aux->proxInd;
                 }
-                aux = aux->proxInd;
+                
+                double tfidf = calcularTFIDF(qtdeTermo, totalTermos, totalDocs, docsComTermo);
+                printf("TF-IDF do ingrediente '%s' no documento %d: %lf\n", celulaAtual->Ingrediente, idDoc, tfidf);
+                
+                indiceAtual = indiceAtual->proxInd;
             }
             
-            double tfidf = calcularTFIDF(qtdeTermo, totalTermos, totalDocs, docsComTermo);
-            printf("TF-IDF do ingrediente '%s' no documento %d: %lf\n", celulaAtual->Ingrediente, idDoc, tfidf);
-            
-            indiceAtual = indiceAtual->proxInd;
+            celulaAtual = celulaAtual->Prox;
         }
-        
-        celulaAtual = celulaAtual->Prox;
     }
 }
 
