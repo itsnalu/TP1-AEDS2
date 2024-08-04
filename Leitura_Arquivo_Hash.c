@@ -1,4 +1,5 @@
-#include "Leitura_Arquivo.h"
+#include "Leitura_Arquivo_Hash.h"
+#include <math.h>
 
 void To_Lower_Case(char *str)
 {
@@ -37,20 +38,6 @@ void remover_espacos_fim(char *str) {
     }
 }
 
-// int Contar_Ocorrencias(const char *string, const char *substring)
-// {
-//     int count = 0;
-//     const char *temp = string;
-
-//     while ((temp = strstr(temp, substring)) != NULL)
-//     {
-//         count++;
-//         temp += strlen(substring); // Próxima contagem vai começar a partir de onde achou a primeira ocorrência :p
-//     }
-
-//     return count;
-// }
-
 
 int Contar_Ingrediente(char* string,int tamanho){
     int count = 0;
@@ -66,38 +53,6 @@ int Contar_Ingrediente(char* string,int tamanho){
     return count;
 }
 
-
-int Compara_Caractere(const FILE *arq, const char *str)
-{
-    int count = 0;
-    int tamanhoString = strlen(str);
-    int ContadorCorrespondencia = 0;
-    int caractere;
-
-    FILE *arqCopy = (FILE *)arq;
-    // Loop para ler o arquivo caractere por caractere
-    while ((caractere = fgetc(arqCopy)) != EOF)
-    {
-        if (caractere == str[ContadorCorrespondencia])
-        {
-            // Se o caractere corresponde ao da string, incrementa o contador de correspondência
-            ContadorCorrespondencia++;
-            if (ContadorCorrespondencia == tamanhoString)
-            {
-                // Se todos os caracteres da string foram encontrados, incrementa o contador de ocorrências
-                count++;
-                ContadorCorrespondencia = 0; // Reinicia o contador de correspondência para procurar novas ocorrências
-            }
-        }
-        else
-        {
-            // Se o caractere não corresponde, reinicia o contador de correspondência
-            ContadorCorrespondencia = 0;
-        }
-    }
-
-    return count;
-}
 
 
 int Contar_Ocorrencias(char *texto, char *ingrediente)
@@ -159,7 +114,7 @@ char *Le_arquivo_inteiro(char *arquivo, int *tamanho)
     return buffer;
 }
 
-void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j)
+void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j, int *termos_por_doc)  
 {
     int tamanho, indice, count[3] = {1, 1, 1};
     char *vetor = Le_arquivo_inteiro(nomeArquivo, &tamanho);
@@ -208,14 +163,15 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j)
         linha = strtok(NULL, "\n");
         linhaAtual++;
     }
-    printf("Nome:%s\n", nome);
-    printf("Ingredientes:%s\n", ingredientes);
-    printf("Instrucoes:%s\n", instrucoes);
+    //printf("Nome:%s\n", nome);
+    //printf("Ingredientes:%s\n", ingredientes);
+    //printf("Instrucoes:%s\n", instrucoes);
 
     To_Lower_Case(instrucoes);
     To_Lower_Case(nome);
     
     int qtdIngrediente = Contar_Ingrediente(ingredientes, count[1]);
+    termos_por_doc[j - 1] = qtdIngrediente;
 
 
     FILE *arquivo = fopen(nomeArquivo, "r");
@@ -243,7 +199,7 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j)
         printf("Erro ao abrir o arquivo.\n");
         return;
     }
-    printf("LAUALUA\n");
+
     // Leia o conteúdo inteiro do arquivo
     size_t tamanhos = fread(tamanho_ingredientes, 1, sizeof(tamanho_ingredientes) - 1, arquivo);
     tamanho_ingredientes[tamanhos] = '\0'; // Garantir que o buffer é uma string válida
@@ -263,14 +219,13 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j)
         }
         
         // Processar o ingrediente individual
-        printf("Ingrediente:%s\n", ingrediente_individual);
+        //printf("Ingrediente:%s\n", ingrediente_individual);
         To_Lower_Case(ingrediente_individual);
         Remove_Pontuacao(ingrediente_individual);
-        printf("Ingrediente tratado: %s\n", ingrediente_individual);
-        Insere(ingrediente_individual, p, T);
-        printf("LAUALUA\n");
+        //printf("Ingrediente tratado: %s\n", ingrediente_individual);
+        Insere_Hash(ingrediente_individual, p, T);
         Ocorrencias_Hash(instrucoes, nome, ingrediente_individual, j, p, T);
-        printf("LAUALUA\n");
+
 
         // Obter o próximo ingrediente
         ingrediente_individual = strtok(NULL, ";");
@@ -285,13 +240,78 @@ void Ocorrencias_Hash(char *texto, char *nome, char *ingrediente, int j, TipoPes
     Doc_id = j;
     count += Contar_Ocorrencias(texto, ingrediente);
 
-    ap = Pesquisa(ingrediente, p, Tabela); 
+    ap = Pesquisa_Hash(ingrediente, p, Tabela); 
 
     InsereIndice_Invertido(count, Doc_id, &(ap->Indices));
 
-    printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
+    //printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
+
+}
+
+void Imprimir_IndiceInvertido_Hash(char *ingrediente, TipoPesos p, Tabela_Hash *T)
+{
+    Apontador_Prox ap;
+    ap = Pesquisa_Hash(ingrediente, p, T);
+
+    if (ap == NULL)
+    {
+        printf("O ingrediente %s não foi encontrado\n", ingrediente);
+        return;
+    }
+    printf("Qtd,idDoc\n");
+    printf("%s: ", ingrediente);
+    while (ap->Indices != NULL)
+    {
+        printf("<%d, %d> ", ap->Indices->qtde, ap->Indices->idDoc);
+        ap->Indices = ap->Indices->proxInd;
+    }
+    printf("\n");
+}
+
+double calcularTF(int qtdeTermo, int totalTermos) {
+    return (double)qtdeTermo / totalTermos;
+}
 
 
+double calcularIDF(int totalDocs, int docsComTermo) {
+    return log((double)totalDocs / (docsComTermo));
+}
+
+double calcularTFIDF(int qtdeTermo, int totalTermos, int totalDocs, int docsComTermo) {
+    double tf = calcularTF(qtdeTermo, totalTermos);
+    double idf = calcularIDF(totalDocs, docsComTermo);
+    return tf * idf;
+}
+
+void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc) {
+    Tipo_Celula *celulaAtual = tabela->Primeiro;
+    
+    while (celulaAtual != NULL) {
+        Indice_Invertido *indiceAtual = celulaAtual->Indices;
+        
+        while (indiceAtual != NULL) {
+            int qtdeTermo = indiceAtual->qtde;
+            int idDoc = indiceAtual->idDoc;
+            int totalTermos = totalTermosPorDoc[idDoc - 1];
+            int docsComTermo = 0;
+            
+            // Contar em quantos documentos o termo aparece
+            Indice_Invertido *aux = celulaAtual->Indices;
+            while (aux != NULL) {
+                if (aux->qtde > 0) {
+                    docsComTermo++;
+                }
+                aux = aux->proxInd;
+            }
+            
+            double tfidf = calcularTFIDF(qtdeTermo, totalTermos, totalDocs, docsComTermo);
+            printf("TF-IDF do ingrediente '%s' no documento %d: %lf\n", celulaAtual->Ingrediente, idDoc, tfidf);
+            
+            indiceAtual = indiceAtual->proxInd;
+        }
+        
+        celulaAtual = celulaAtual->Prox;
+    }
 }
 
     // memset(ingrediente_individual, '\0', 40);

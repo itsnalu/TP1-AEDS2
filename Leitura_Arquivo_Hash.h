@@ -26,16 +26,21 @@ typedef struct Campos_Arquivo
 } Campos_Arquivo;
 
 
-    
-
-
 
 char* Le_arquivo_inteiro(char *arquivo, int *tamanho);
 int contarCaracteresSegundaLinha(const char *nomeArquivo);
 void Inicializa_Campo(Campos_Arquivo Campo);
 int Contar_Ocorrencias(char *texto, char *ingrediente);
+int Contar_Ingrediente(char* string,int tamanho);
 void Ocorrencias_Hash(char *texto, char *nome, char *ingrediente, int j, TipoPesos p, Tabela_Hash *Tabela);
-void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j);
+void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j, int *termos_por_doc);  
 void Remove_Espaco(char *str);
 void Remove_Pontuacao(char *str);
 void To_Lower_Case(char *str);
+void Imprimir_IndiceInvertido_Hash(char *ingrediente, TipoPesos p, Tabela_Hash *T);
+
+
+double calcularTF(int qtdeTermo, int totalTermos);
+double calcularIDF(int totalDocs, int docsComTermo);
+double calcularTFIDF(int qtdeTermo, int totalTermos, int totalDocs, int docsComTermo);
+void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc);

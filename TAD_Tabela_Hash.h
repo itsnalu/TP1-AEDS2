@@ -13,7 +13,7 @@
 
 
 /* typedef unsigned int  TipoPesos[n]; */
-typedef char* Palavra;
+typedef char* Palavra_Hash;
 
 typedef struct Indice_Invertido
 {
@@ -26,7 +26,7 @@ typedef struct Tipo_Celula* Apontador_Prox;
 
 typedef struct Tipo_Celula
 {
-    Palavra Ingrediente;
+    Palavra_Hash Ingrediente;
     struct Tipo_Celula *Prox;
     struct Indice_Invertido* Indices;
 } Tipo_Celula;
@@ -49,14 +49,14 @@ void FIndice_Invertido(Indice_Invertido *Lista);
 void InsereIndice_Invertido(int qtde, int idDoc, Indice_Invertido **Lista);
 void FL_Vazia(Tabela_Hash *Lista);
 short Vazia(Tabela_Hash Lista);
-void Ins(Palavra x, Tabela_Hash *Lista);
-void Ret(Apontador_Prox p, Tabela_Hash *Lista, Palavra *Ingrediente);
+void Ins(Palavra_Hash x, Tabela_Hash *Lista);
+void Ret(Apontador_Prox p, Tabela_Hash *Lista, Palavra_Hash *Ingrediente);
 void GeraPesos(TipoPesos p);
-TipoIndice h(Palavra Chave, TipoPesos p);
+TipoIndice h(Palavra_Hash Chave, TipoPesos p);
 void Inicializa(Vetor T);
-Apontador_Prox Pesquisa(Palavra Ch, TipoPesos p, Vetor T);
-void Insere(Palavra x, TipoPesos p, Vetor T);
-void Retira(Palavra x, TipoPesos p, Vetor T);
+Apontador_Prox Pesquisa_Hash(Palavra_Hash Ch, TipoPesos p, Vetor T);
+void Insere_Hash(Palavra_Hash x, TipoPesos p, Vetor T);
+void Retira(Palavra_Hash x, TipoPesos p, Vetor T);
 void Imp(Tabela_Hash Lista);
 void Imprime(Vetor Tabela);
 

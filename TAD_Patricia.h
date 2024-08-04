@@ -30,25 +30,28 @@ typedef struct TipoPatNo
             unsigned char Caractere;
         } NInterno;
         Palavra Chave;
+        
     } NO;
+    
 } TipoPatNo;
 
 typedef struct Indice_Invertido* Apontador_Ind;
 //typedef struct Tipo_Celula* Apontador_Prox;
 
-typedef struct Indice_Invertido
+typedef struct Indice_Invertido_Patricia
 {
     int qtde;
     int idDoc;
     Apontador_Ind proxInd;
-} Indice_Invertido;
+} Indice_Invertido_Patricia;
 
 TipoArvore CriaNoExterno(Palavra chave);
 TipoArvore CriaNoInterno(TipoIndexAmp index, TipoArvore *Esq, TipoArvore *Dir, unsigned char caractere);
 TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere);
 TipoArvore Insere(Palavra k, TipoArvore *t);
-int Pesquisa(Palavra chave, TipoArvore t);
+void Pesquisa(Palavra chave, TipoArvore t);
 void Libera(TipoArvore t);
+
 void ImprimeEmOrdemAux(TipoArvore t);
 void ImprimeEmOrdem(TipoArvore t);
 
@@ -57,5 +60,7 @@ void ImprimeEmOrdemComDirecao(TipoArvore t);
 
 void ImprimeEmOrdemAuxComInternos(TipoArvore t);
 void ImprimeEmOrdemComInternos(TipoArvore t);
+
+int ArvoreVazia(TipoArvore t);
 
 #endif

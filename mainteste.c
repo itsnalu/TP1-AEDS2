@@ -1,18 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Leitura_Arquivo.h"
+#include "Leitura_Arquivo_Hash.h"
+#include "Leitura_Arquivo_Patricia.h"
 
 
 int main() {
     int numArquivos;
     char nomeArquivo[MAX_FILENAME_LENGTH];
     
+    TipoArvore arvore = NULL;
+    int totalIngredientes;
+    int totalDocs;
     Vetor Tabela;
     TipoPesos p;
     Inicializa(Tabela);
     GeraPesos(p);
-
 
 
     // Abrir o arquivo entrada.txt
@@ -30,6 +33,10 @@ int main() {
     }
 
 
+    int TermosporArquivo[numArquivos];  
+    totalDocs = numArquivos;
+    totalIngredientes = 46;
+    
     // Loop para ler e abrir cada arquivo especificado
     for (int i = 0; i < numArquivos; i++) {
         // Ler o nome do arquivo do arquivo entrada.txt
@@ -48,14 +55,47 @@ int main() {
         }
 
         // Chamar a função Armazenar
-        Armazenar(nomeArquivo, p, Tabela, (i+1));
+        Armazenar(nomeArquivo, p, Tabela, (i+1), TermosporArquivo);
+        //Armazenar_Patricia(nomeArquivo, &arvore, (i+1));
+        
+        
         printf("%d\n", i);
         // Fechar o arquivo
         fclose(arquivo);
     }
 
-    Imprime(Tabela);
 
+    calcularTFIDFParaTodos(Tabela, totalDocs, TermosporArquivo);
+
+
+    // char *Ingrediente;
+    // Ingrediente = (char*) malloc(100 * sizeof(char));
+    // if (fgets(Ingrediente, 100, stdin) != NULL) {
+    //     size_t len = strlen(Ingrediente);
+    //     if (len > 0 && Ingrediente[len - 1] == '\n') {
+    //         Ingrediente[len - 1] = '\0';  // Remove o caractere de nova linha
+    //     }
+    // }
+    // Imprimir_IndiceInvertido_Hash(Ingrediente, p, Tabela);
+
+    // int lala = ArvoreVazia(arvore);
+    // printf("%d\n", lala);
+    // // Imprime(Tabela);
+    // ImprimeEmOrdem(arvore);
+    // ImprimeEmOrdemComInternos(arvore);
+
+    // printf("Digite a palavra para pesquisar: \n");
+    /* char *Ingrediente;
+    Ingrediente = (char*) malloc(100 * sizeof(char));
+    if (fgets(Ingrediente, 100, stdin) != NULL) {
+        size_t len = strlen(Ingrediente);
+        if (len > 0 && Ingrediente[len - 1] == '\n') {
+            Ingrediente[len - 1] = '\0';  // Remove o caractere de nova linha
+        }
+    } */
+    // Pesquisa(Ingrediente,arvore);
+
+    // Libera(arvore);
     fclose(entrada); // Fechar o arquivo entrada.txt
 }
 

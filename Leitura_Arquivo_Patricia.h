@@ -6,6 +6,10 @@
 #define MAX_INGREDIENT_LENGTH 100
 
 
-void Remove_Espaco(char *str);
-void Remove_Pontuacao(char *str);
-void lerEProcessarArquivo_Patricia(const char *nomeArquivo, TipoArvore Patricia);
+
+void Remove_Espaco_Patricia(char *str);
+void Remove_Pontuacao_Patricia(char *str);
+void Armazenar_Patricia(char *nomeArquivo, TipoArvore *patricia, int j);
+int Contar_Ocorrencias_Patricia(char *texto, char *ingrediente);
+int Contar_Ingrediente_Patricia(char* string,int tamanho);
+void To_Lower_Case_Patricia(char *str);

@@ -59,6 +59,10 @@
   "files.associations": {
     "leitura_arquivo.h": "c",
     "tad_tabela_hash.h": "c",
-    "tad_patricia.h": "c"
+    "tad_patricia.h": "c",
+    "time.h": "c",
+    "leitura_arquivo_patricia.h": "c",
+    "leitura_arquivo_hash.h": "c",
+    "stdlib.h": "c"
   }
 }

@@ -49,7 +49,7 @@ short Vazia(Tabela_Hash Lista)
     return (Lista.Primeiro == Lista.Ultimo);
 }
 
-void Ins(Palavra x, Tabela_Hash *Lista)
+void Ins(Palavra_Hash x, Tabela_Hash *Lista)
 {
     Lista->Ultimo->Prox = (Apontador_Prox)malloc(sizeof(Tipo_Celula));
     Lista->Ultimo = Lista->Ultimo->Prox;
@@ -58,7 +58,7 @@ void Ins(Palavra x, Tabela_Hash *Lista)
     Lista->Ultimo->Indices = NULL;
 }
 
-void Ret(Apontador_Prox p, Tabela_Hash *Lista, Palavra *Ingrediente)
+void Ret(Apontador_Prox p, Tabela_Hash *Lista, Palavra_Hash *Ingrediente)
 {
     Apontador_Prox q;
     if (Vazia(*Lista) || p == NULL || p->Prox == NULL)
@@ -88,7 +88,7 @@ void GeraPesos(TipoPesos p)
             p[i][j] = 1 + (int)(10000.0 * rand() / (RAND_MAX + 1.0));
 }
 
-TipoIndice h(Palavra Chave, TipoPesos p)
+TipoIndice h(Palavra_Hash Chave, TipoPesos p)
 {
     int i;
     unsigned int Soma = 0;
@@ -105,7 +105,7 @@ void Inicializa(Vetor T)
         FL_Vazia(&T[i]);
 }
 
-Apontador_Prox Pesquisa(Palavra Ch, TipoPesos p, Vetor T)
+Apontador_Prox Pesquisa_Hash(Palavra_Hash Ch, TipoPesos p, Vetor T)
 {
     TipoIndice i;
     Apontador_Prox Ap;
@@ -124,18 +124,18 @@ Apontador_Prox Pesquisa(Palavra Ch, TipoPesos p, Vetor T)
     }
 }
 
-void Insere(Palavra x, TipoPesos p, Vetor T)
+void Insere_Hash(Palavra_Hash x, TipoPesos p, Vetor T)
 {
-    if (Pesquisa(x, p, T) == NULL)
+    if (Pesquisa_Hash(x, p, T) == NULL)
         Ins(x, &T[h(x, p)]);
-    else
-        printf(" Registro ja  esta  presente\n");
+    //else
+        //printf(" Registro ja  esta  presente\n");
 }
 
-void Retira(Palavra x, TipoPesos p, Vetor T)
+void Retira(Palavra_Hash x, TipoPesos p, Vetor T)
 {
     Apontador_Prox Ap;
-    Ap = Pesquisa(x, p, T);
+    Ap = Pesquisa_Hash(x, p, T);
     if (Ap == NULL)
         printf(" Registro nao esta  presente\n");
     else
@@ -180,7 +180,7 @@ void GeraPesos(TipoPesos p)
      p[i] =  1+(int) (10000.0*rand()/(RAND_MAX+1.0));
 }
 
-TipoIndice h(Palavra Chave, TipoPesos p)
+TipoIndice h(Palavra_Hash Chave, TipoPesos p)
 { int i;
   unsigned int Soma = 0;
   int comp = strlen(Chave);
