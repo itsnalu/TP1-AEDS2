@@ -126,9 +126,9 @@ void Armazenar_Patricia(char *nomeArquivo, TipoArvore *patricia, int j)
         linha = strtok(NULL, "\n");
         linhaAtual++;
     }
-    printf("Nome:%s\n", nome);
+    /* printf("Nome:%s\n", nome);
     printf("Ingredientes:%s\n", ingredientes);
-    printf("Instrucoes:%s\n", instrucoes);
+    printf("Instrucoes:%s\n", instrucoes); */
 
     To_Lower_Case_Patricia(instrucoes);
     To_Lower_Case_Patricia(nome);
@@ -180,11 +180,11 @@ void Armazenar_Patricia(char *nomeArquivo, TipoArvore *patricia, int j)
         }
         
         // Processar o ingrediente individual
-        printf("Ingrediente:%s\n", ingrediente_individual);
+        //printf("Ingrediente:%s\n", ingrediente_individual);
         To_Lower_Case_Patricia(ingrediente_individual);
         Remove_Pontuacao_Patricia(ingrediente_individual);
-        printf("Ingrediente tratado: %s\n", ingrediente_individual);
-        *(patricia) = Insere(ingrediente_individual, patricia);
+        //printf("Ingrediente tratado: %s\n", ingrediente_individual);
+        *(patricia) = Insere(ingrediente_individual, patricia, j);
     
         // Ocorrencias_Patricia(instrucoes, nome, ingrediente_individual, j, patricia);
 
@@ -195,3 +195,47 @@ void Armazenar_Patricia(char *nomeArquivo, TipoArvore *patricia, int j)
 
 }
 
+int Contar_Ocorrencias_Patricia(char *texto, char *ingrediente)
+{
+    int count = 0;
+    int tamanhoIngrediente = strlen(ingrediente);
+    
+    // if (tamanhoTexto < tamanhoIngrediente)
+    // {
+    //     return 0;
+    // }
+    
+
+    char *posicao = texto;
+
+    // Loop para ler o arquivo caractere por caractere
+    while ((posicao = strstr(posicao, ingrediente)) != NULL)
+    {
+        // verifica se nas extremidades da string tem um espaço ou se é o final da string
+        if ((posicao == texto || *(posicao - 1) == ' ') && (*(posicao + tamanhoIngrediente) == ' ' || *(posicao + tamanhoIngrediente) == '\0' || *(posicao + tamanhoIngrediente) == ';'))
+        {
+            count++;
+        }
+        posicao += tamanhoIngrediente;
+    }
+
+    return count;
+} 
+
+void Ocorrencias_Patricia(char *texto, char *nome, char *ingrediente, int j, TipoArvore patricia){
+    int count = 1; //Inicializado com 1, já que todo ingrediente já vai estar no arquivo pelo menos uma vez (na lista de ingredientes)
+    int Doc_id;
+    TipoArvore ap;
+    Doc_id = j;
+    count += Contar_Ocorrencias_Patricia(texto, ingrediente);
+
+    // precisa alterar a funçao pesquisa para retornar o nó
+    // ap =  Pesquisa(ingrediente, patricia);
+
+    // InsereIndice_Invertido(count, Doc_id, &(ap->Indices));
+
+    //InsereIndice(count, Doc_id, &(ap->Lista_ind));
+
+    printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
+
+} 

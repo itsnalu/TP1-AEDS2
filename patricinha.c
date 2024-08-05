@@ -1,77 +1,93 @@
-#include "TAD_Patricia.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "Indice_Patricia.h"
+#include "Leitura_Arquivo_Patricia.h"
+
 
 int main() {
+    
+    int numArquivos;
+    char nomeArquivo[MAX_FILENAME_LENGTH];
+    
     TipoArvore arvore = NULL;
-    int qtd;
-    /* 
-    printf("DIGITE A QUANTIDADE DE PALAVRINHAS: ");
-    scanf("%d",&qtd);
-    Palavra palavrinha = (Palavra)malloc(100*sizeof(unsigned char));
-    for(int i = 0; i < qtd; i++){
-        printf("DIGITE A PALAVRINHA: ");
-        scanf("%s", palavrinha+i);
-        arvore = Insere(palavrinha, arvore);
+    int totalIngredientes;
+    int totalDocs;
+
+    // Abrir o arquivo entrada.txt
+    FILE *entrada = fopen("entrada.txt", "r");
+    if (entrada == NULL) {
+        perror("Erro ao abrir o arquivo entrada.txt");
+        return 1;
     }
-    */
+
+    // Ler o número de arquivos
+    if (fscanf(entrada, "%d", &numArquivos) != 1) {
+        perror("Erro ao ler o número de arquivos");
+        fclose(entrada);
+        return 1;
+    }
+
+    int TermosporArquivo[numArquivos];  
+    totalDocs = numArquivos;
+    totalIngredientes = 46;
     
-    /* Palavra palavra1 = (Palavra)"casca";
-    Palavra palavra2 = (Palavra)"casco";
-    Palavra palavra3 = (Palavra)"cascalho";
-    Palavra palavra4 = (Palavra)"cascavel";
-    Palavra palavra5 = (Palavra)"casce"; 
-    Palavra palavra6 = (Palavra)"canalha"; 
-    Palavra palavra7 = (Palavra)"alesia";
-    Palavra palavra8 = (Palavra)"alexia";
-    Palavra palavra9 = (Palavra)"aa";
-    Palavra palavra10 = (Palavra)"a";
+    // Loop para ler e abrir cada arquivo especificado
+    for (int i = 0; i < numArquivos; i++) {
+        // Ler o nome do arquivo do arquivo entrada.txt
+        if (fscanf(entrada, "%s", nomeArquivo) != 1) {
+            perror("Erro ao ler o nome do arquivo");
+            fclose(entrada);
+            return 1;
+        }
 
-    arvore = Insere(palavra1, &arvore);
-    arvore = Insere(palavra2, &arvore);
-    arvore = Insere(palavra3, &arvore);
-    arvore = Insere(palavra4, &arvore);
-    arvore = Insere(palavra5, &arvore); 
-    arvore = Insere(palavra6, &arvore); 
-    arvore = Insere(palavra7, &arvore);
-    arvore = Insere(palavra8, &arvore);
-    arvore = Insere(palavra9, &arvore);
-    arvore = Insere(palavra10, &arvore);
+        
+        // Abrir o arquivo
+        FILE *arquivo = fopen(nomeArquivo, "r");
+        if (arquivo == NULL) {
+            perror("Erro ao abrir o arquivo");
+            continue; // Pula para a próxima iteração do loop
+        }
 
-    printf("Arvore sera impressa em ordem sem internos: \n");
-    ImprimeEmOrdem(arvore);
-    ImprimeEmOrdemComInternos(arvore); */
+        // Chamar a função Armazenar
+        Armazenar_Patricia(nomeArquivo, &arvore, (i+1));
+        
+        
+        // printf("%d\n", i);
+        // Fechar o arquivo
+        fclose(arquivo);
+    }
 
-    Palavra palavra1 = (Palavra)"casa";
-    Palavra palavra2 = (Palavra)"caso";
-    Palavra palavra3 = (Palavra)"casu";
-    Palavra palavra4 = (Palavra)"case";
-    Palavra palavra5 = (Palavra)"casi"; 
-    Palavra palavra6 = (Palavra)"casu"; 
-    Palavra palavra7 = (Palavra)"casulo";
-    Palavra palavra8 = (Palavra)"casulaine";
-    Palavra palavra9 = (Palavra)"casule";
-    Palavra palavra10 = (Palavra)"cas";
-
-    arvore = Insere(palavra1, &arvore);
-    arvore = Insere(palavra2, &arvore);
-    arvore = Insere(palavra3, &arvore);
-    arvore = Insere(palavra4, &arvore);
-    arvore = Insere(palavra5, &arvore); 
-    arvore = Insere(palavra6, &arvore); 
-    arvore = Insere(palavra7, &arvore);
-    arvore = Insere(palavra8, &arvore);
-    arvore = Insere(palavra9, &arvore);
-    arvore = Insere(palavra10, &arvore);
-
-    printf("Arvore sera impressa em ordem sem internos: \n");
-    ImprimeEmOrdem(arvore);
-    printf("Arvore sera impressa em ordem com internos: \n");
-    ImprimeEmOrdemComInternos(arvore);
-    printf("Arvore sera impressa em pre ordem com internos: \n");
-    ImprimePreOrdem(arvore);
-
-
-
-    //free(palavrinha);
-    return 0;
     
+
+    //calcularTFIDFParaTodos(Tabela, totalDocs, TermosporArquivo);
+   
+
+    ImprimeEmOrdem(arvore);
+    // ImprimeEmOrdemComInternos(arvore);
+
+    char *Ingrediente;
+    Ingrediente = (char*) malloc(100 * sizeof(char));
+    do
+    {
+        printf("Digite o ingrediente (Digite 0 para voltar ao menu\n): ");
+        if (fgets(Ingrediente, 100, stdin) != NULL) {
+            size_t len = strlen(Ingrediente);
+            if (len > 0 && Ingrediente[len - 1] == '\n') {
+                Ingrediente[len - 1] = '\0';  // Remove o caractere de nova linha
+            }
+        }
+        //printf("%s: ", Ingrediente);   
+
+        //Pesquisa(Ingrediente, arvore);
+        Busca_Palavra_Indice((Palavra)Ingrediente, arvore);
+
+        //Imprimir_IndiceInvertido_Hash(Ingrediente, p, Tabela);
+
+    } while (Ingrediente[0] != '0');
+    
+    
+
+    Libera(arvore);
+    fclose(entrada); // Fechar o arquivo entrada.txt
 }

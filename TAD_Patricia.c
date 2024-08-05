@@ -1,20 +1,18 @@
-/*
-Alexia Karoline Augusta Germano Silva [EF05373] 
-Ana Luisa Moreira Rodrigues [EF05389] 
-Dalmo Nolasco Dantas Rainer [EF05361] 
-Lucas da Costa Moreira [EF05377]
-*/
-
 #include "TAD_Patricia.h"
+#include "Indice_Patricia.h"
 #include <string.h>
 
 /* Função auxiliar para criar um nó externo */
-TipoArvore CriaNoExterno(Palavra chave) {
+TipoArvore CriaNoExterno(Palavra chave, int idDoc) {
     TipoArvore p;
     p = (TipoArvore)malloc(sizeof(TipoPatNo));
     p->nt = Externo;
     p->NO.Chave = (Palavra)malloc(strlen(chave)*sizeof(unsigned char)+1);
     strcpy((char*)p->NO.Chave, (char*)chave);
+
+    p->Lista_ind = (Lista_encadeada*)malloc(sizeof(Lista_encadeada));
+    FLVazia(p->Lista_ind);
+    InsereIndice(1, idDoc, p->Lista_ind); //inicia em 1 pois adicionou a palavra
     return p;
 }
 
@@ -34,22 +32,22 @@ short EExterno(TipoArvore p)
     return (p->nt == Externo);
 }
 
-TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere)
+TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere, int idDoc)
 {
     TipoArvore p;
     //Verifica se o nó atual é um nó externo ou se o índice i é menor que o índice do nó interno atual
     if (EExterno(*t) || i < (*t)->NO.NInterno.Index)
     {
         //Cria um novo nó externo com a chave a ser inserida
-        p = CriaNoExterno(k);
+        p = CriaNoExterno(k, idDoc);
         //Compara o caractere da palavra k na posição i com o caractere do nó interno atual.
         if (k[i] >= caractere){
-            //Se o caractere da palavra for maior ou igual, cria um novo nó interno com o nó externo p como filho direito
-            return CriaNoInterno(i, t, &p, caractere); // Cria nó interno com k[i] >= caractere do nó interno
+            //Se o caractere da palavra for maior, cria um novo nó interno com o nó externo p como filho direito
+            return CriaNoInterno(i, t, &p, caractere); // Cria nó interno com k[i] > caractere do nó interno
         }
         else{
-            //Se o caractere da palavra for menor, cria um novo nó interno com o nó externo p como filho esquerdo
-            return CriaNoInterno(i, &p, t, caractere); // Cria nó interno com k[i] < caractere do nó interno
+            //Se o caractere da palavra for menor ou igual, cria um novo nó interno com o nó externo p como filho esquerdo
+            return CriaNoInterno(i, &p, t, caractere); // Cria nó interno com k[i] <= caractere do nó interno
         }
     }
     else
@@ -57,12 +55,10 @@ TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere)
         //Se o nó não é externo e o índice i não é menor que o índice do nó interno atual
         //Compara o caractere da palavra k na posição do índice do nó interno atual com o caractere do nó interno atual
         if (k[(*t)->NO.NInterno.Index] < (*t)->NO.NInterno.Caractere){
-            //Se a letra da palavra k for menor em relacao ao caractere, chama recursivamente o InsereEntre para o nó a esquerda
-            (*t)->NO.NInterno.Esq = InsereEntre(k, &(*t)->NO.NInterno.Esq, i,caractere);
+            (*t)->NO.NInterno.Esq = InsereEntre(k, &(*t)->NO.NInterno.Esq, i,caractere, idDoc);
         }
         else{
-            //Se a letra da palavra k for maior ou igual ao caractere, chama recursivamente o InsereEntre para o nó a direita
-            (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i,caractere);
+            (*t)->NO.NInterno.Dir = InsereEntre(k, &(*t)->NO.NInterno.Dir, i,caractere, idDoc);
         }
         //Retorna o nó atual, que pode ter sido atualizado com novos filhos internos ou externos.
         return (*t);
@@ -71,8 +67,7 @@ TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere)
 
 
 
-
-TipoArvore Insere(Palavra k, TipoArvore *t)
+TipoArvore Insere(Palavra k, TipoArvore *t, int idDoc)
 {
     TipoArvore p;
     int i;
@@ -80,7 +75,7 @@ TipoArvore Insere(Palavra k, TipoArvore *t)
 
     if (*t == NULL)
     {
-        return CriaNoExterno(k); //Arvore vazia, cria nó externo com a chave k
+        return CriaNoExterno(k, idDoc); //Arvore vazia, cria nó externo com a chave k
     }
     else
     {
@@ -96,39 +91,26 @@ TipoArvore Insere(Palavra k, TipoArvore *t)
         i = 0;
         while (tolower(k[i]) == tolower(p->NO.Chave[i]) && i <= strlen(k))
             i++;
-        
+
         letra_dif=k[i];
 
-        if (k[i] == '\0' && p->NO.Chave[i] == '\0')
+        if (i > strlen(k))
         {
             printf("Erro: chave ja esta na arvore\n");
+            if(Arquivo_Existe(p->Lista_ind, idDoc) == 0){
+                InsereIndice(1, idDoc, p->Lista_ind);
+            }
             return (*t); //Chave já existente na arvore, portanto nao insere. retorna a arvore original
         }
-        else
-            return InsereEntre(k, t, i, letra_dif); // Supondo que essa função insere entre os nós
-    }
-}
+        else{
+            if(k[i] > p->NO.Chave[i]){
+                return InsereEntre(k, t, i, k[i], idDoc); //Funcao para inserir entre os nós(será necessário criar nó interno)
+            }
+            else{
+                return InsereEntre(k, t, i, p->NO.Chave[i], idDoc);
+            }
 
-
-/* Função para buscar uma palavra na árvore */
-void Pesquisa(Palavra chave, TipoArvore t) {
-    if (t == NULL){
-        printf("Arvore vazia.\n");
-    }
-
-    TipoArvore p = t;
-    while (p->nt == Interno) {
-        if ((unsigned char)chave[p->NO.NInterno.Index] < p->NO.NInterno.Caractere)
-            p = p->NO.NInterno.Esq;
-        else
-            p = p->NO.NInterno.Dir;
-    }
-
-    if(strcmp((char*)chave, (char*)p->NO.Chave) == 0){
-        printf("Ingrediente encontrado.\n");
-    }
-    else{
-        printf("Ingrediente não está presente na arvore.\n");
+        }
     }
 }
 
@@ -161,22 +143,7 @@ void ImprimeEmOrdem(TipoArvore t) {
 }
 
 
-
-
-
-void ImprimeEmOrdemAuxComDirecao(TipoArvore t, const char* direcao) {
-    if (t != NULL) {
-        if (EExterno(t)) {
-            printf("Externo: %s (%s)\n", t->NO.Chave, direcao);
-        } else {
-            printf("Interno: Index = %d, Caractere = %c (%s)\n", t->NO.NInterno.Index, t->NO.NInterno.Caractere, direcao);
-            ImprimeEmOrdemAuxComDirecao(t->NO.NInterno.Esq, "Esq");
-            ImprimeEmOrdemAuxComDirecao(t->NO.NInterno.Dir, "Dir");
-        }
-    }
-}
-
-
+/* Função auxiliar para imprimir a árvore em ordem com a direção dos nós */
 void ImprimeEmOrdemAuxComInternos(TipoArvore t) {
     if (t != NULL) {
         if (!EExterno(t)) {
@@ -201,4 +168,46 @@ void ImprimeEmOrdemAuxComInternos(TipoArvore t) {
 /* Função para iniciar a impressão da árvore em ordem */
 void ImprimeEmOrdemComInternos(TipoArvore t) {
     ImprimeEmOrdemAuxComInternos(t);
+}
+
+
+TipoArvore Pesquisa(Palavra chave, TipoArvore t) {
+    if (t == NULL){
+        printf("Arvore vazia.\n");
+    }
+
+    TipoArvore p = t;
+    while (p->nt == Interno) {
+        if ((unsigned char)chave[p->NO.NInterno.Index] < p->NO.NInterno.Caractere)
+            p = p->NO.NInterno.Esq;
+        else
+            p = p->NO.NInterno.Dir;
+    }
+
+    if(strcmp((char*)chave, (char*)p->NO.Chave) == 0){
+        printf("Ingrediente encontrado.\n");
+        return p;
+    }
+    else{
+        printf("Ingrediente não está presente na arvore.\n");
+        return NULL;
+    }
+}
+
+void Busca_Palavra_Indice(Palavra palavra, TipoArvore p){
+    if (p == NULL){
+        printf("Arvore vazia.\n");
+    }
+
+    TipoArvore aux = p;
+    aux = Pesquisa(palavra, aux);
+
+    if(aux != NULL){
+        Imprime_Lista(aux->Lista_ind);
+        Busca_Repeticoes_Palavra(aux->Lista_ind);
+    }
+    else{
+        printf("Palavra não encontrada.\n");
+    }
+
 }

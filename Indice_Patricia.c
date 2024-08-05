@@ -7,66 +7,63 @@ Lucas da Costa Moreira [EF05377]
 
 #include "Indice_Patricia.h"
 
-int Contar_Ocorrencias_Patricia(char *texto, char *ingrediente)
+
+// Inicia lista encadeada
+void FLVazia(Lista_encadeada *Lista)
 {
-    int count = 0;
-    int tamanhoIngrediente = strlen(ingrediente);
-    
-    // if (tamanhoTexto < tamanhoIngrediente)
-    // {
-    //     return 0;
-    // }
-    
-
-    char *posicao = texto;
-
-    // Loop para ler o arquivo caractere por caractere
-    while ((posicao = strstr(posicao, ingrediente)) != NULL)
-    {
-        // verifica se nas extremidades da string tem um espaço ou se é o final da string
-        if ((posicao == texto || *(posicao - 1) == ' ') && (*(posicao + tamanhoIngrediente) == ' ' || *(posicao + tamanhoIngrediente) == '\0' || *(posicao + tamanhoIngrediente) == ';'))
-        {
-            count++;
-        }
-        posicao += tamanhoIngrediente;
-    }
-
-    return count;
+    Lista->primeiro = (Ponteiro_ind)malloc(sizeof(Celula_Indice_Invertido_Patricia));
+    Lista->ultimo = Lista->primeiro;
+    Lista->primeiro->prox = NULL;
 }
 
-void Ocorrencias_Patricia(char *texto, char *nome, char *ingrediente, int j, TipoArvore patricia){
-    int count = 1; //Inicializado com 1, já que todo ingrediente já vai estar no arquivo pelo menos uma vez (na lista de ingredientes)
-    int Doc_id;
-    TipoArvore ap;
-    Doc_id = j;
-    count += Contar_Ocorrencias_Patricia(texto, ingrediente);
+int Vazia(Lista_encadeada Lista)
+{
+    return (Lista.primeiro == Lista.ultimo);
+}
 
-    // precisa alterar a funçao pesquisa para retornar o nó
-    // ap =  Pesquisa(ingrediente, patricia);
+void InsereIndice(int quantidade, int idDoc, Lista_encadeada *Lista)
+{
+    Lista->ultimo->prox = (Ponteiro_ind)malloc(sizeof(Celula_Indice_Invertido_Patricia));
+    Lista->ultimo = Lista->ultimo->prox;
+    Lista->ultimo->item.idDoc = quantidade;
+    Lista->ultimo->item.qtde = idDoc;
+    Lista->ultimo->prox = NULL;
+}
 
-    // InsereIndice_Invertido(count, Doc_id, &(ap->Indices));
+void Imprime_Lista(Lista_encadeada *Lista)
+{
+    Ponteiro_ind Aux;
+    Aux = Lista->primeiro->prox;
+    while (Aux != NULL)
+    {
+        printf("Documento ID: %d, Quantidade: %d\n", Aux->item.idDoc, Aux->item.qtde);
+        Aux = Aux->prox;
+    }
+}
 
-    printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
+int Arquivo_Existe(Lista_encadeada *Lista, int idDoc){
+    Ponteiro_ind Aux;
+    Aux = Lista->primeiro->prox;
+    while (Aux != NULL)
+    {
+        if(Aux->item.idDoc == idDoc){
+            Aux->item.qtde++; //Palavra repete no mesmo documento
+            return 1;
+        }
+        Aux = Aux->prox;
+    }
+    return 0;
+}
 
-} 
+int Busca_Repeticoes_Palavra(Lista_encadeada *Lista){
 
+    Ponteiro_ind Aux;
+    Aux = Lista->primeiro->prox;
+    while (Aux != NULL)
+    {
+        printf("<Documento ID: %d, Quantidade: %d> ", Aux->item.idDoc, Aux->item.qtde);
+        Aux = Aux->prox;
+    }
+    return 0;
 
-// void Imprimir_IndiceInvertido_Patricia(char *ingrediente, TipoPesos p, Tabela_Hash *T)
-// {
-//     // Apontador_Prox ap;
-//     // ap = Pesquisa(ingrediente, p, T);
-
-//     // if (ap == NULL)
-//     // {
-//     //     printf("O ingrediente %s não foi encontrado\n", ingrediente);
-//     //     return;
-//     // }
-//     // printf("Qtd,idDoc\n");
-//     // printf("%s: ", ingrediente);
-//     // while (ap->Indices != NULL)
-//     // {
-//     //     printf("<%d, %d> ", ap->Indices->qtde, ap->Indices->idDoc);
-//     //     ap->Indices = ap->Indices->proxInd;
-//     // }
-//     // printf("\n");
-// }
+}

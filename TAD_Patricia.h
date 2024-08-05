@@ -13,8 +13,6 @@ Lucas da Costa Moreira [EF05377]
 #include <sys/time.h>
 #include <string.h>
 #include <ctype.h> // biblioteca para tolower
-#define D 8 /* depende de TipoChave */
-
 
 typedef unsigned char* Palavra; /* a definir, dependendo da aplicacao */
 typedef unsigned char TipoIndexAmp;
@@ -37,26 +35,19 @@ typedef struct TipoPatNo
             unsigned char Caractere;
         } NInterno;
         Palavra Chave;
-        // struct Indice_Invertido_Patricia *Indices;
+            
     } NO;
-    
+    struct Lista_encadeada_Indice_Invertido_Patricia *Lista_ind;
 } TipoPatNo;
 
-typedef struct Indice_Invertido* Apontador_Ind;
-//typedef struct Tipo_Celula* Apontador_Prox;
 
-typedef struct Indice_Invertido_Patricia
-{
-    int qtde; //Quantidade de repeticoes
-    int idDoc; //identificador do document
-    Apontador_Ind *proxInd;
-} Indice_Invertido_Patricia;
 
-TipoArvore CriaNoExterno(Palavra chave);
+
+TipoArvore CriaNoExterno(Palavra chave, int idDoc);
 TipoArvore CriaNoInterno(TipoIndexAmp index, TipoArvore *Esq, TipoArvore *Dir, unsigned char caractere);
-TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere);
-TipoArvore Insere(Palavra k, TipoArvore *t);
-void Pesquisa(Palavra chave, TipoArvore t);
+TipoArvore InsereEntre(Palavra k, TipoArvore *t, int i, unsigned char caractere, int idDoc);
+TipoArvore Insere(Palavra k, TipoArvore *t, int idDoc);
+TipoArvore Pesquisa(Palavra chave, TipoArvore t);
 void Libera(TipoArvore t);
 
 void ImprimeEmOrdemAux(TipoArvore t);
@@ -65,6 +56,6 @@ void ImprimeEmOrdem(TipoArvore t);
 void ImprimeEmOrdemAuxComInternos(TipoArvore t);
 void ImprimeEmOrdemComInternos(TipoArvore t);
 
-int ArvoreVazia(TipoArvore t);
+void Busca_Palavra_Indice(Palavra palavra, TipoArvore p);
 
 #endif
