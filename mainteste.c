@@ -14,6 +14,7 @@ int main() {
     int totalDocs;
     Vetor Tabela;
     TipoPesos p;
+    InicializaVetor(Tabela);
     Inicializa(Tabela);
     GeraPesos(p);
 
@@ -67,22 +68,24 @@ int main() {
     Imprime(Tabela);
 
 
-    char *Ingrediente;
-    Ingrediente = (char*) malloc(100 * sizeof(char));
-    do
-    {
-        printf("Digite o ingrediente (Digite 0 para voltar ao menu): ");
-        if (fgets(Ingrediente, 100, stdin) != NULL) {
-            size_t len = strlen(Ingrediente);
-            if (len > 0 && Ingrediente[len - 1] == '\n') {
-                Ingrediente[len - 1] = '\0';  // Remove o caractere de nova linha
-            }
-        }
-        printf("%s: ", Ingrediente);   
-        Imprimir_IndiceInvertido_Hash(Ingrediente, p, Tabela);
-    } while (Ingrediente[0] != '0');
-    
+    // char *Ingrediente;
+    // Ingrediente = (char*) malloc(100 * sizeof(char));
+    // do
+    // {
+    //     printf("Digite o ingrediente (Digite 0 para voltar ao menu): ");
+    //     if (fgets(Ingrediente, 100, stdin) != NULL) {
+    //         size_t len = strlen(Ingrediente);
+    //         if (len > 0 && Ingrediente[len - 1] == '\n') {
+    //             Ingrediente[len - 1] = '\0';  // Remove o caractere de nova linha
+    //         }
+    //     }
+    //     Imprimir_IndiceInvertido_Hash(Ingrediente, p, Tabela);
+    //     //memset(Ingrediente, '\0', sizeof(Ingrediente));
 
+    // } while (Ingrediente[0] != '0');
+    
+    // imprimirIngredientes(Tabela, totalDocs);
+    printf("\n");
     calcularTFIDFParaTodos(Tabela, totalDocs, TermosporArquivo);
 
 
@@ -116,44 +119,4 @@ int main() {
     // Libera(arvore);
     fclose(entrada); // Fechar o arquivo entrada.txt
 }
-
-
-
-/* 
-    char* palavras[] = {"banana", "abacaxi", "uva", "manga", "laranja", "melancia", "cereja", "pera", "maca", "cavalo", "cebola"};
-    int n = sizeof(palavras) / sizeof(palavras[0]);
-
-    printf("%d\n", n);
-    printf("Inserindo palavras:\n");
-    for (int i = 0; i < n; i++)
-    {
-        printf("Inserindo %s\n", palavras[i]);
-        Insere(palavras[i], p, Tabela);
-    }
-
-    
-
-    printf("\nTabela Hash após inserções:\n");
-    Imprime(Tabela);
-
-    
-
-    printf("\nPesquisando palavras:\n");
-    for (int i = 0; i < n; i++)
-    {
-        if (Pesquisa(palavras[i], p, Tabela) != NULL)
-            printf("Palavra %s encontrada.\n", palavras[i]);
-        else
-            printf("Palavra %s não encontrada.\n", palavras[i]);
-    }
-
-    printf("\nRemovendo algumas palavras:\n");
-    for (int i = 0; i < n; i += 2)
-    {
-        printf("Removendo %s\n", palavras[i]);
-        Retira(palavras[i], p, Tabela);
-    }
-
-    printf("\nTabela Hash após remoções:\n");
-    Imprime(Tabela); */
 

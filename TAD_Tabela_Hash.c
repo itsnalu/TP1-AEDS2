@@ -8,6 +8,13 @@ Lucas da Costa Moreira [EF05377]
 #include "TAD_Tabela_Hash.h"
 
 
+void InicializaVetor(Vetor T) {
+    for (int i = 0; i < M; i++) {
+        T[i].Primeiro = NULL;
+        T[i].Ultimo = NULL;
+    }
+}
+
 
 void FL_Vazia(Tabela_Hash *Lista)
 {
@@ -132,6 +139,40 @@ Apontador_Prox Pesquisa_Hash(Palavra_Hash Ch, TipoPesos p, Vetor T)
     }
 }
 
+// Celula_Ingrediente* Pesquisa_Hash(Hash *tabela, char *ingrediente) {
+//     int posicao = HashingUniversal(ingrediente, tabela->MatrizPeso);
+//     Celula_Ingrediente *aux = tabela->TabelaIngrediente[posicao];
+
+//     while (aux != NULL) {
+//         if (strcmp(aux->Ingrediente, ingrediente) == 0) {
+//             return aux;
+//         }
+//         aux = aux->Prox;
+//     }
+
+//     printf("Ingrediente '%s' não encontrado na posição %d da tabela hash.\n", ingrediente, posicao);
+//     return NULL;
+// }
+
+// Tipo_Celula Busca_Hash(Palavra_Hash Ch, TipoPesos p, Vetor T)
+// {
+//     TipoIndice i;
+//     Apontador_Prox Ap;
+//     i = h(Ch, p);
+//     if (Vazia(T[i]))
+//         return NULL;
+//     else
+//     {
+//         Ap = T[i].Primeiro;
+//         while (Ap->Prox->Prox != NULL && strcmp(Ch, Ap->Prox->Ingrediente))
+//             Ap = Ap->Prox;
+//         if (!strcmp(Ch, Ap->Prox->Ingrediente))
+//             return Ap;
+//         else
+//             return NULL;
+//     }
+// }
+
 void Insere_Hash(Palavra_Hash x, TipoPesos p, Vetor T)
 {
     if (Pesquisa_Hash(x, p, T) == NULL)
@@ -177,6 +218,7 @@ void Imprime(Vetor Tabela)
         
     }
 }
+
 
 /*
 void GeraPesos(TipoPesos p)

@@ -233,7 +233,7 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j, int *termo
         //printf("Ingrediente tratado: %s\n", ingrediente_individual);
         Insere_Hash(ingrediente_individual, p, T);
 
-        Ocorrencias_Hash(instrucoes, nome, ingrediente_individual, j, p, T);
+        Ocorrencias_Hash(instrucoes, ingrediente_individual, j, p, T);
 
 
         // Obter o próximo ingrediente
@@ -242,7 +242,7 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j, int *termo
 
 }
 
-void Ocorrencias_Hash(char *texto, char *nome, char *ingrediente, int j, TipoPesos p, Tabela_Hash *Tabela){
+void Ocorrencias_Hash(char *texto, char *ingrediente, int j, TipoPesos p, Tabela_Hash *Tabela){
     int count = 1; //Inicializado com 1, já que todo ingrediente já vai estar no arquivo pelo menos uma vez (na lista de ingredientes)
     int Doc_id;
     Apontador_Prox ap;
@@ -251,22 +251,106 @@ void Ocorrencias_Hash(char *texto, char *nome, char *ingrediente, int j, TipoPes
 
     ap = Pesquisa_Hash(ingrediente, p, Tabela); 
 
-    InsereIndice_Invertido(count, Doc_id, &(ap->Indices));
-
-    //printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
+    if (ap != NULL) { // Verifica se o ingrediente foi encontrado
+        InsereIndice_Invertido(count, Doc_id, &(ap->Indices)); // Insere índice invertido
+    } else {
+        printf("O ingrediente %s não foi encontrado\n", ingrediente);
+        return;
+    }
+    printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
 
 }
 
+double calcularPesoTermo(int frequencia, int totalDocs, int numDocsComTermo) {
+    return frequencia * log10((double)totalDocs / (double)numDocsComTermo);
+}
 
+
+// Função para calcular a relevância do documento (r(i))
+double calcularRelevanciaDocumento(Tipo_Celula *celulaAtual, int totalDocs, int *totalTermosPorDoc) {
+    double somaPesos = 0.0;
+    Indice_Invertido *indiceAtual = celulaAtual->Indices;
+
+    while (indiceAtual != NULL) {
+        int f_ji = indiceAtual->qtde;
+        int idDoc = indiceAtual->idDoc;
+        int totalTermosDistintos = totalTermosPorDoc[idDoc - 1]; // Utiliza o vetor totalTermosPorDoc
+        int docsComTermo = contarDocsComTermo(indiceAtual);
+
+        double pesoTermo = calcularPesoTermo(f_ji, totalDocs, docsComTermo);
+        somaPesos += pesoTermo;
+        indiceAtual = indiceAtual->proxInd;
+    }
+
+    return somaPesos;
+}
+// double calcularRelevanciaDocumento(Tipo_Celula *celulaAtual, int totalTermosDistintos, int totalDocs) {
+//     double somaPesos = 0.0;
+//     Indice_Invertido *indiceAtual = celulaAtual->Indices;
+//     int docsComTermo = 0;
+        
+
+//     docsComTermo = contarDocsComTermo(indiceAtual);
+
+//     indiceAtual = celulaAtual->Indices;
+//     while (indiceAtual != NULL) {
+//         int f_ji = indiceAtual->qtde;
+//         double pesoTermo = calcularPesoTermo(f_ji, totalDocs, docsComTermo);
+//         somaPesos += pesoTermo;
+//         indiceAtual = indiceAtual->proxInd;
+//     }
+
+//     return (somaPesos / totalTermosDistintos;
+// }
+
+// Função para calcular a relevância de todos os documentos
+void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc) {
+    for (int i = 0; i < M; i++) {
+        // Verifica se a posição da tabela não é nula
+        if (tabela[i].Primeiro != NULL) {
+            Tipo_Celula *celulaAtual = tabela[i].Primeiro->Prox;
+
+            // Percorre a lista ligada de ingredientes
+            while (celulaAtual != NULL) {
+                printf("Celula atual: %s\n", celulaAtual->Ingrediente);
+
+                int totalTermosDistintos = 0;
+                Indice_Invertido *indiceAtual = celulaAtual->Indices;
+                
+                // // Percorre a lista ligada de índices invertidos
+                // while (indiceAtual != NULL) {
+                //     totalTermosDistintos++;
+                //     printf("Ingrediente %s Documento %d: %d\n", celulaAtual->Ingrediente, indiceAtual->idDoc, indiceAtual->qtde);
+                //     indiceAtual = indiceAtual->proxInd;
+                // }
+
+                // Calcula a relevância do documento
+                double relevanciaDocumento = calcularRelevanciaDocumento(celulaAtual, totalDocs, totalTermosPorDoc);
+                // printf("Relevancia do documento para o ingrediente '%s': %lf\n", celulaAtual->Ingrediente, relevanciaDocumento);
+
+                celulaAtual = celulaAtual->Prox;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+/* 
 double calcularTFIDF(int qtdeTermo, int totalTermos, int totalDocs, int docsComTermo) {
     double tf = (double)qtdeTermo / totalTermos;
-    double idf = log((double)totalDocs / (docsComTermo + 1));
+    double idf = (log10((double)totalDocs)) / (docsComTermo + 1);
     return tf * idf;
 }
 
 void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc) {
+    int l = 0;
     for (int i = 0; i < M; i++) { // Percorre todos os índices da tabela hash
         Tipo_Celula *celulaAtual = tabela[i].Primeiro;
+        // memcpy(celulaAtual, tabela[i].Primeiro, sizeof(Tipo_Celula));
         
         while (celulaAtual != NULL) {
             Indice_Invertido *indiceAtual = celulaAtual->Indices;
@@ -276,13 +360,17 @@ void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermos
                 int qtdeTermo = indiceAtual->qtde;
                 int idDoc = indiceAtual->idDoc;
                 int totalTermos = totalTermosPorDoc[idDoc - 1];
+                printf("totalTermos = %d", totalTermos);
                 int docsComTermo = 0;
                 
                 // Contar em quantos documentos o termo aparece
                 Indice_Invertido *aux = celulaAtual->Indices;
+                // Indice_Invertido *aux;
+                // memcpy(aux, aux1, sizeof(Indice_Invertido));
                 while (aux != NULL) {
                     if (aux->qtde > 0) {
                         docsComTermo++;
+                        printf("docsComTermo: %d\n", docsComTermo);
                     }
                     aux = aux->proxInd;
                 }
@@ -294,9 +382,12 @@ void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermos
             }
             
             celulaAtual = celulaAtual->Prox;
+            l++;
+            printf("%d\n", l);
         }
+
     }
-}
+} */
 
     // memset(ingrediente_individual, '\0', 40);
     // printf("antes do scanf arquivo %s\n", nomeArquivo);

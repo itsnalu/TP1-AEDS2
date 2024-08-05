@@ -48,11 +48,13 @@ void Armazenar(char *nomeArquivo, TipoPesos p, Tabela_Hash *T, int j, int *termo
 void Remove_Espaco(char *str);
 void Remove_Pontuacao(char *str);
 void To_Lower_Case(char *str);
-void Ocorrencias_Hash(char *texto, char *nome, char *ingrediente, int j, TipoPesos p, Tabela_Hash *Tabela);
+void Ocorrencias_Hash(char *texto, char *ingrediente, int j, TipoPesos p, Tabela_Hash *Tabela);
 
-double calcularTF(int qtdeTermo, int totalTermos);
-double calcularIDF(int totalDocs, int docsComTermo);
-double calcularTFIDF(int qtdeTermo, int totalTermos, int totalDocs, int docsComTermo);
+
+double calcularPesoTermo(int frequencia, int totalDocs, int numDocsComTermo) ;
+double calcularRelevanciaDocumento(Tipo_Celula *celulaAtual, int totalDocs, int *totalTermosPorDoc);
 void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc);
+// double calcularTFIDF(int qtdeTermo, int totalTermos, int totalDocs, int docsComTermo);
+// void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc);
 
 #endif

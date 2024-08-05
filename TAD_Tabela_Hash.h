@@ -58,7 +58,7 @@ typedef Tabela_Hash Vetor[M];
 typedef unsigned int TipoIndice;
 
 
-
+void InicializaVetor(Vetor T);
 void FIndice_Invertido(Indice_Invertido *Lista);
 void InsereIndice_Invertido(int qtde, int idDoc, Indice_Invertido **Lista);
 void FL_Vazia(Tabela_Hash *Lista);
@@ -69,6 +69,7 @@ void GeraPesos(TipoPesos p);
 TipoIndice h(Palavra_Hash Chave, TipoPesos p);
 void Inicializa(Vetor T);
 Apontador_Prox Pesquisa_Hash(Palavra_Hash Ch, TipoPesos p, Vetor T);
+//Tipo_Celula Busca_Hash(Palavra_Hash Ch, TipoPesos p, Vetor T);
 void Insere_Hash(Palavra_Hash x, TipoPesos p, Vetor T);
 void Retira(Palavra_Hash x, TipoPesos p, Vetor T);
 void Imp(Tabela_Hash Lista);
