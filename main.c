@@ -60,6 +60,10 @@ int main() {
                     return 1;
                 }
 
+                int TermosporArquivo[numArquivos];  
+                totalDocs = numArquivos;
+                totalIngredientes = 46;
+
                 // Loop para ler e abrir cada arquivo especificado
                 for (int i = 0; i < numArquivos; i++) {
                     // Ler o nome do arquivo
@@ -67,7 +71,8 @@ int main() {
                         perror("Erro ao ler o nome do arquivo");
                         fclose(entrada);
                         return 1;
-                        Armazenar_Patricia(nomeArquivo, &arvore, (i+1));    
+                        Armazenar_Patricia(nomeArquivo, &arvore, (i+1));
+                        Armazenar(entrada, p, &Tabela, i+1, TermosporArquivo);    
                     }
 
                 // Abrir o arquivo
@@ -83,14 +88,14 @@ int main() {
                 break;
             case 2:
                 //
-                printf("ohhh bobo, ja foi feito\n");
+                printf("Devido ao processo do desenvolvimento do projeto, este passo já foi feito durante o recebimento do arquivo de entrada\n");
                 break;
             case 3:
                 //
                 char *Ingrediente;
+                Ingrediente = (char*) malloc(100 * sizeof(char));
                 do
                 {
-                    Ingrediente = (char*) malloc(100 * sizeof(char));
                     printf("Digite o ingrediente (Digite 0 para voltar ao menu): ");
                     if (fgets(Ingrediente, 100, stdin) != NULL) {
                         size_t len = strlen(Ingrediente);
@@ -99,6 +104,7 @@ int main() {
                         }
                     }
                     Imprimir_IndiceInvertido_Hash(Ingrediente, p, Tabela);
+                    //memset(Ingrediente, '\0', sizeof(Ingrediente)); //Iria limpar o vetor atribuindo fim de string no vetor inteiro, mas causou problemas com o Ingrediente[0]
                 } while (Ingrediente[0] != '0');
 
                 break;
