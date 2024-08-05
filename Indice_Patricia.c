@@ -25,8 +25,8 @@ void InsereIndice(int quantidade, int idDoc, Lista_encadeada *Lista)
 {
     Lista->ultimo->prox = (Ponteiro_ind)malloc(sizeof(Celula_Indice_Invertido_Patricia));
     Lista->ultimo = Lista->ultimo->prox;
-    Lista->ultimo->item.idDoc = quantidade;
-    Lista->ultimo->item.qtde = idDoc;
+    Lista->ultimo->item.idDoc = idDoc;
+    Lista->ultimo->item.qtde = quantidade;
     Lista->ultimo->prox = NULL;
 }
 

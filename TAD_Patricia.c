@@ -203,7 +203,7 @@ void Busca_Palavra_Indice(Palavra palavra, TipoArvore p){
     aux = Pesquisa(palavra, aux);
 
     if(aux != NULL){
-        Imprime_Lista(aux->Lista_ind);
+        //Imprime_Lista(aux->Lista_ind);
         Busca_Repeticoes_Palavra(aux->Lista_ind);
     }
     else{
