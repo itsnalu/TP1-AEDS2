@@ -8,6 +8,7 @@ Lucas da Costa Moreira [EF05377]
 #include "Indice_Patricia.h"
 
 
+
 // Inicia lista encadeada
 void FLVazia(Lista_encadeada *Lista)
 {
@@ -16,7 +17,7 @@ void FLVazia(Lista_encadeada *Lista)
     Lista->primeiro->prox = NULL;
 }
 
-int Vazia(Lista_encadeada Lista)
+int Vazia_Patricia(Lista_encadeada Lista)
 {
     return (Lista.primeiro == Lista.ultimo);
 }
@@ -28,6 +29,11 @@ void InsereIndice(int quantidade, int idDoc, Lista_encadeada *Lista)
     Lista->ultimo->item.idDoc = idDoc;
     Lista->ultimo->item.qtde = quantidade;
     Lista->ultimo->prox = NULL;
+}
+
+void Adiciona_Indice(int quantidade, int idDoc, Lista_encadeada *Lista)
+{
+    Lista->ultimo->item.qtde += quantidade;
 }
 
 void Imprime_Lista(Lista_encadeada *Lista)
@@ -66,4 +72,17 @@ int Busca_Repeticoes_Palavra(Lista_encadeada *Lista){
     }
     return 0;
 
+}
+
+
+int contarDocsComTermo_Pat(Celula_Indice_Invertido_Patricia *celulaAtual) {
+    int docsComTermo = 0;
+    Celula_Indice_Invertido_Patricia *aux = celulaAtual;
+    while (aux != NULL) {
+        if (aux->item.qtde > 0) {
+            docsComTermo++;
+        }
+        aux = aux->prox;
+    }
+    return docsComTermo;
 }

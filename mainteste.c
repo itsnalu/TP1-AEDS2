@@ -3,7 +3,7 @@
 #include <string.h>
 #include "Indice_Hash.h"
 //#include "Indice_Patricia.h"
-
+#define SUBPASTA "arquivos/"
 
 int main() {
     int numArquivos;
@@ -47,16 +47,23 @@ int main() {
             return 1;
         }
 
-        
+
+        char caminhoCompleto[MAX_FILENAME_LENGTH];
+
+        snprintf(caminhoCompleto, sizeof(caminhoCompleto), "%s%s", SUBPASTA, nomeArquivo);
+
+
         // Abrir o arquivo
-        FILE *arquivo = fopen(nomeArquivo, "r");
+        FILE *arquivo = fopen(caminhoCompleto, "r");
         if (arquivo == NULL) {
+            
             perror("Erro ao abrir o arquivo");
             continue; // Pula para a próxima iteração do loop
         }
 
         // Chamar a função Armazenar
-        Armazenar(nomeArquivo, p, Tabela, (i+1), TermosporArquivo);
+        printf("%s\n", caminhoCompleto);
+        Armazenar(caminhoCompleto, p, Tabela, (i+1), TermosporArquivo);
         //Armazenar_Patricia(nomeArquivo, &arvore, (i+1));
         
         

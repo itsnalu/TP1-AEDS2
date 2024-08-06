@@ -65,6 +65,7 @@
     "leitura_arquivo_hash.h": "c",
     "stdlib.h": "c",
     "indice_hash.h": "c",
-    "indice_patricia.h": "c"
+    "indice_patricia.h": "c",
+    "stdio.h": "c"
   }
 }

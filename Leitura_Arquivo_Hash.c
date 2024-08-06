@@ -90,7 +90,6 @@ int Contar_Ocorrencias(char *texto, char *ingrediente)
     return count;
 }
 
-
 char *Le_arquivo_inteiro(char *arquivo, int *tamanho)
 {
     char *buffer = NULL;
@@ -254,10 +253,10 @@ void Ocorrencias_Hash(char *texto, char *ingrediente, int j, TipoPesos p, Tabela
     if (ap != NULL) { // Verifica se o ingrediente foi encontrado
         InsereIndice_Invertido(count, Doc_id, &(ap->Indices)); // Insere índice invertido
     } else {
-        printf("O ingrediente %s não foi encontrado\n", ingrediente);
+        // printf("O ingrediente %s não foi encontrado\n", ingrediente);
         return;
     }
-    printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
+    // printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
 
 }
 

@@ -23,7 +23,11 @@ void Remove_Pontuacao_Patricia(char *str);
 void Armazenar_Patricia(char *nomeArquivo, TipoArvore *patricia, int j);
 void To_Lower_Case_Patricia(char *str);
 int Contar_Ingrediente_Patricia(char* string,int tamanho);
-void Ocorrencias_Patricia(char *texto, char *nome, char *ingrediente, int j, TipoArvore patricia);
+void Ocorrencias_Patricia(char *texto, char *ingrediente, int j, TipoArvore patricia);
 int Contar_Ocorrencias_Patricia(char *texto, char *ingrediente);
+void calcularTFIDFParaTodos_Pat(TipoArvore patricia, int totalDocs, int *totalTermosPorDoc);
+double calcularRelevanciaDocumento_Pat(TipoArvore patricia, int totalDocs, int *totalTermosPorDoc);
+double calcularPesoTermo_Pat(int frequencia, int totalDocs, int numDocsComTermo);
+
 
 #endif

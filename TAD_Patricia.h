@@ -13,6 +13,7 @@ Lucas da Costa Moreira [EF05377]
 #include <sys/time.h>
 #include <string.h>
 #include <ctype.h> // biblioteca para tolower
+#include <math.h>
 
 typedef unsigned char* Palavra; /* a definir, dependendo da aplicacao */
 typedef unsigned char TipoIndexAmp;

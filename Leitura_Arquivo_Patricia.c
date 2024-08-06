@@ -7,6 +7,8 @@ Lucas da Costa Moreira [EF05377]
 
 #include "Leitura_Arquivo_Patricia.h"
 
+#include <math.h>
+
 
 void To_Lower_Case_Patricia(char *str)
 {
@@ -186,7 +188,7 @@ void Armazenar_Patricia(char *nomeArquivo, TipoArvore *patricia, int j)
         //printf("Ingrediente tratado: %s\n", ingrediente_individual);
         *(patricia) = Insere(ingrediente_individual, patricia, j);
     
-        // Ocorrencias_Patricia(instrucoes, nome, ingrediente_individual, j, patricia);
+        Ocorrencias_Patricia(instrucoes, ingrediente_individual, j, *(patricia));
 
 
         // Obter o próximo ingrediente
@@ -222,20 +224,80 @@ int Contar_Ocorrencias_Patricia(char *texto, char *ingrediente)
     return count;
 } 
 
-void Ocorrencias_Patricia(char *texto, char *nome, char *ingrediente, int j, TipoArvore patricia){
-    int count = 1; //Inicializado com 1, já que todo ingrediente já vai estar no arquivo pelo menos uma vez (na lista de ingredientes)
+void Ocorrencias_Patricia(char *texto, char *ingrediente, int j, TipoArvore patricia){
+    int count = 0; //Inicializado com 1, já que todo ingrediente já vai estar no arquivo pelo menos uma vez (na lista de ingredientes)
     int Doc_id;
     TipoArvore ap;
     Doc_id = j;
     count += Contar_Ocorrencias_Patricia(texto, ingrediente);
 
     // precisa alterar a funçao pesquisa para retornar o nó
-    // ap =  Pesquisa(ingrediente, patricia);
+    ap =  Pesquisa(ingrediente, patricia);
 
     // InsereIndice_Invertido(count, Doc_id, &(ap->Indices));
+    if (ap != NULL) { // Verifica se o ingrediente foi encontrado
+        Adiciona_Indice(count, Doc_id, ap->Lista_ind);
+    } else {
+        // printf("O ingrediente %s não foi encontrado\n", ingrediente);
+        return;
+    }
+    // printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
 
-    //InsereIndice(count, Doc_id, &(ap->Lista_ind));
 
-    printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
+
+    // printf("O ingrediente %s aparece %d vezes na receita %d\n", ingrediente, count, Doc_id);
 
 } 
+
+
+double calcularPesoTermo_Pat(int frequencia, int totalDocs, int numDocsComTermo) {
+    return frequencia * log10((double)totalDocs / (double)numDocsComTermo);
+}
+
+
+// Função para calcular a relevância do documento (r(i))
+double calcularRelevanciaDocumento_Pat(TipoArvore patricia, int totalDocs, int *totalTermosPorDoc) {
+    double somaPesos = 0.0;
+    Celula_Indice_Invertido_Patricia *indiceAtual = patricia->Lista_ind->primeiro->prox;
+
+    while (indiceAtual != NULL) {
+        int f_ji = indiceAtual->item.qtde;
+        int idDoc = indiceAtual->item.idDoc;
+        int totalTermosDistintos = totalTermosPorDoc[idDoc - 1]; // Utiliza o vetor totalTermosPorDoc
+        int docsComTermo = contarDocsComTermo_Pat(indiceAtual);
+
+        double pesoTermo = calcularPesoTermo_Pat(f_ji, totalDocs, docsComTermo);
+        somaPesos += pesoTermo;
+        indiceAtual = indiceAtual->prox;
+    }
+
+    return somaPesos;
+}
+
+
+void calcularTFIDFParaTodos_Pat(TipoArvore patricia, int totalDocs, int *totalTermosPorDoc) {
+    if (patricia == NULL) {
+        return;
+    }
+    
+    // Verifica se o nó é interno
+    if (patricia->nt == Interno) {
+        // Chamada recursiva para subárvores esquerda e direita
+        calcularTFIDFParaTodos_Pat(patricia->NO.NInterno.Esq, totalDocs, totalTermosPorDoc);
+        calcularTFIDFParaTodos_Pat(patricia->NO.NInterno.Dir, totalDocs, totalTermosPorDoc);
+    } else { // Nó é externo
+        printf("Palavra: %s\n", patricia->NO.Chave);
+        
+        // Inicializa a lista encadeada de índices invertidos
+        Ponteiro_ind indiceAtual = patricia->Lista_ind->primeiro->prox;
+
+        while (indiceAtual != NULL) {
+            printf("Ingrediente %s Documento %d: %d\n", patricia->NO.Chave, indiceAtual->item.idDoc, indiceAtual->item.qtde);
+            indiceAtual = indiceAtual->prox;
+        }
+
+        // Calcula a relevância do documento
+        double relevanciaDocumento = calcularRelevanciaDocumento_Pat(patricia, totalDocs, totalTermosPorDoc);
+        printf("Relevancia do documento para a palavra '%s': %lf\n", patricia->NO.Chave, relevanciaDocumento);
+    }
+}

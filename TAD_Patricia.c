@@ -1,3 +1,10 @@
+/*
+Alexia Karoline Augusta Germano Silva [EF05373] 
+Ana Luisa Moreira Rodrigues [EF05389] 
+Dalmo Nolasco Dantas Rainer [EF05361] 
+Lucas da Costa Moreira [EF05377]
+*/
+
 #include "TAD_Patricia.h"
 #include "Indice_Patricia.h"
 #include <string.h>
@@ -185,7 +192,7 @@ TipoArvore Pesquisa(Palavra chave, TipoArvore t) {
     }
 
     if(strcmp((char*)chave, (char*)p->NO.Chave) == 0){
-        printf("Ingrediente encontrado.\n");
+        //printf("Ingrediente encontrado.\n");
         return p;
     }
     else{
@@ -195,6 +202,10 @@ TipoArvore Pesquisa(Palavra chave, TipoArvore t) {
 }
 
 void Busca_Palavra_Indice(Palavra palavra, TipoArvore p){
+    if (palavra[0] == '0')
+    {
+        return;
+    }
     if (p == NULL){
         printf("Arvore vazia.\n");
     }
@@ -207,7 +218,8 @@ void Busca_Palavra_Indice(Palavra palavra, TipoArvore p){
         Busca_Repeticoes_Palavra(aux->Lista_ind);
     }
     else{
-        printf("Palavra não encontrada.\n");
+        //printf("Palavra não encontrada.\n");
     }
 
 }
+

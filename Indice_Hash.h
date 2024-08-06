@@ -13,6 +13,7 @@ Lucas da Costa Moreira [EF05377]
 
 void Imprimir_IndiceInvertido_Hash(char *ingrediente, TipoPesos p, Tabela_Hash *T);
 int contarDocsComTermo(Indice_Invertido *indiceAtual);
-void imprimirIngredientes(Tabela_Hash *tabela, int totalDocs) ;
+void imprimirIngredientes(Tabela_Hash *tabela, int totalDocs);
+//char **fCaminhoArquivos(char **arquivos, int qtd);
 
 #endif // INDICE_HASH_H

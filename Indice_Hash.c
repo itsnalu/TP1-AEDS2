@@ -83,3 +83,34 @@ void imprimirIngredientes(Tabela_Hash *tabela, int totalDocs) {
     //printf("%s: ", ingrediente);
 
 
+// Função que gera o caminho completo dos arquivos
+// char **fCaminhoArquivos(char **arquivos, int qtd) {
+//     char **caminho = (char **)calloc(qtd, sizeof(char *));
+//     if (caminho == NULL) {
+//         perror("Erro ao alocar memória para os caminhos dos arquivos");
+//         for (int i = 0; i < qtd; i++) {
+//             free(arquivos[i]);
+//         }
+//         free(arquivos);
+//         return NULL;
+//     }
+
+//     for (int i = 0; i < qtd; i++) {
+        
+//         caminho[i] = malloc(1024);
+//         if (caminho[i] == NULL) {
+//             perror("Erro ao alocar memória para o caminho do arquivo");
+//             for (int j = 0; j < i; j++) {
+//                 free(caminho[j]);
+//             }
+//             for (int k = 0; k < qtd; k++) {
+//                 free(arquivos[k]);
+//             }
+//             free(arquivos);
+//             return NULL;
+//         }
+//         snprintf(caminho[i], 1024, "arquivos/%s", arquivos[i]);
+//     }
+
+//     return caminho;
+// }

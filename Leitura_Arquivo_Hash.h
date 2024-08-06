@@ -57,4 +57,5 @@ void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermos
 // double calcularTFIDF(int qtdeTermo, int totalTermos, int totalDocs, int docsComTermo);
 // void calcularTFIDFParaTodos(Tabela_Hash *tabela, int totalDocs, int *totalTermosPorDoc);
 
+
 #endif
